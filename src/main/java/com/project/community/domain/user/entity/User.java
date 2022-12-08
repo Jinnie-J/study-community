@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Getter
 @EqualsAndHashCode(of = "id")
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class User {
 
@@ -32,16 +31,15 @@ public class User {
     private LocalDateTime modifyDate;
 
     @Builder
-    public User(Long id, String email, String location, String nickname, String password){
+    public User(Long id, String email, String location, String nickname, String password, LocalDateTime createDate, LocalDateTime modifyDate){
         this.id = id;
         this.email = email;
         this.location = location;
         this.nickname = nickname;
         this.password = password;
+        this.createDate = createDate;
+        this.modifyDate = modifyDate;
     }
-
-
-
 
 
 }
