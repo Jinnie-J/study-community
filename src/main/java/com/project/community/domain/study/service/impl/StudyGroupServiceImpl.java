@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -24,5 +26,13 @@ public class StudyGroupServiceImpl implements StudyGroupService {
         StudyGroup newStudyGroup = studyGroupRepository.save(studyGroup);
 
         return StudyGroupResponse.fromEntity(newStudyGroup);
+    }
+
+    @Override
+    public List<StudyGroupResponse> getAllStudyGroup() {
+        return studyGroupRepository.findAll()
+                .stream()
+                .map(StudyGroupResponse::fromEntity)
+                .collect(Collectors.toList());
     }
 }
