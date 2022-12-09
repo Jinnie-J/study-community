@@ -1,5 +1,6 @@
 package com.project.community.domain.user.controller;
 
+import com.project.community.common.CurrentUser;
 import com.project.community.domain.user.SignUpFormValidator;
 import com.project.community.domain.user.dto.request.SignUpForm;
 import com.project.community.domain.user.entity.User;
@@ -25,6 +26,19 @@ public class UserController {
     @InitBinder("signUpForm")
     public void initBinder(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(signUpFormValidator);
+    }
+
+    @GetMapping("/")
+    public String home(@CurrentUser User user, Model model){
+        if (user != null){
+            model.addAttribute(user);
+        }
+        return "index";
+    }
+
+    @GetMapping("/login")
+    public String login(){
+        return "login";
     }
 
     @GetMapping("/sign-up")
