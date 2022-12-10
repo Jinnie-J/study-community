@@ -1,12 +1,12 @@
 package com.project.community.domain.study.entity;
 
+import com.project.community.domain.user.entity.UserGroup;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -39,6 +39,9 @@ public class StudyGroup {
     private LocalDateTime createDate;  //등록일
 
     private LocalDateTime updateDate;  //수정일
+
+    @OneToMany(mappedBy = "studyGroup", cascade = CascadeType.ALL)
+    private List<UserGroup> userGroups = new ArrayList();
 
     @Builder
     public StudyGroup(Long id, String title, String content, String studyType, String numberOfMembers, String location,

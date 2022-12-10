@@ -4,11 +4,12 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @EqualsAndHashCode(of = "id")
-@Builder
 @NoArgsConstructor
 public class User {
 
@@ -29,6 +30,9 @@ public class User {
     private LocalDateTime createDate;
 
     private LocalDateTime modifyDate;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserGroup> userGroups = new ArrayList<>();
 
     @Builder
     public User(Long id, String email, String location, String nickname, String password, LocalDateTime createDate, LocalDateTime modifyDate){
