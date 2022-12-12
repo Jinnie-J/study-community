@@ -40,9 +40,27 @@ public class StudyGroup {
 
     private LocalDateTime updateDate;  //수정일
 
+    private boolean recruiting; // 모집중
+
+    private boolean closed; // 모집마감
+
     @OneToMany(mappedBy = "studyGroup", cascade = CascadeType.ALL)
     private List<UserGroup> userGroups = new ArrayList();
 
+    public void close(){
+        this.closed = true;
+    }
+
+    public void update(String title, String content, String studyType, String numberOfMembers, String location, String duration, String online, LocalDateTime studyStartDate){
+        this.title = title;
+        this.content = content;
+        this.studyType = studyType;
+        this.numberOfMembers = numberOfMembers;
+        this.location = location;
+        this.duration = duration;
+        this.online = online;
+        this.studyStartDate = studyStartDate;
+    }
     @Builder
     public StudyGroup(Long id, String title, String content, String studyType, String numberOfMembers, String location,
                       String duration, String online, LocalDateTime studyStartDate, LocalDateTime createDate, LocalDateTime updateDate){

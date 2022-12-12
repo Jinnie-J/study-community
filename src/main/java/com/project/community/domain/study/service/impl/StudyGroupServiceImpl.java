@@ -35,4 +35,41 @@ public class StudyGroupServiceImpl implements StudyGroupService {
                 .map(StudyGroupResponse::fromEntity)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public StudyGroupResponse getStudyGroup(Long studyGroupId) {
+        StudyGroup studyGroup = studyGroupRepository.findById(studyGroupId)
+                .orElseThrow(() -> {
+                    throw new IllegalArgumentException(studyGroupId + "에 해당하는 스터디가 없습니다.");
+                });
+        return StudyGroupResponse.fromEntity(studyGroup);
+    }
+
+    //수정 - 리더 권한 체크하기
+    @Override
+    public void updateStudyGroup(User user, Long studyGroupId, StudyGroupRequest studyGroupRequest) {
+
+        StudyGroup studyGroup = studyGroupRepository.findById(studyGroupId)
+                .orElseThrow(() -> new IllegalArgumentException(studyGroupId + "에 해당하는 스터디가 없습니다."));
+
+        studyGroup.update(studyGroupRequest.getTitle(), studyGroupRequest.getContent(), studyGroupRequest.getStudyType(),
+                studyGroupRequest.getLocation(), studyGroupRequest.getDuration(), studyGroupRequest.getNumberOfMembers(),
+                studyGroupRequest.getOnline(), studyGroupRequest.getStudyStartDate());
+    }
+
+    @Override
+    public void closeStudyGroup(User user, Long studyGroupId) {
+        StudyGroup studyGroup = validateDeleteStudyGroup(user, studyGroupId);
+        studyGroup.close();
+    }
+
+    //삭제 - 리더 권한 체크하기
+    @Override
+    public StudyGroup validateDeleteStudyGroup(User user, Long studyGroupId) {
+        StudyGroup studyGroup = studyGroupRepository.findById(studyGroupId)
+                .orElseThrow(() -> new IllegalArgumentException(studyGroupId + "에 해당하는 스터디가 없습니다."));
+
+        return studyGroup;
+
+    }
 }
