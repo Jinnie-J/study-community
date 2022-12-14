@@ -38,6 +38,8 @@ public class StudyGroupResponse {
 
     private LocalDateTime updateDate;
 
+    private Boolean closed;
+
     public static StudyGroupResponse fromEntity(StudyGroup studyGroup){
         return StudyGroupResponse.builder()
                 .studyGroupId(studyGroup.getId())
@@ -49,6 +51,7 @@ public class StudyGroupResponse {
                 .duration(studyGroup.getDuration())
                 .online(studyGroup.getOnline())
                 .studyStartDate(studyGroup.getStudyStartDate())
+                .closed(studyGroup.isClosed())
                 .build();
     }
 }

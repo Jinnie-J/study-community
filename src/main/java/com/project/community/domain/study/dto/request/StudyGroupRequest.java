@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -30,11 +31,14 @@ public class StudyGroupRequest {
 
     private String online;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime studyStartDate;
 
     private LocalDateTime createDate;
 
     private LocalDateTime updateDate;
+
+    private boolean closed;
 
 
     public static StudyGroup toEntity(StudyGroupRequest studyGroupRequest){
@@ -47,6 +51,7 @@ public class StudyGroupRequest {
                 .duration(studyGroupRequest.getDuration())
                 .online(studyGroupRequest.getOnline())
                 .studyStartDate(studyGroupRequest.getStudyStartDate())
+                .closed(studyGroupRequest.isClosed())
                 .build();
     }
 

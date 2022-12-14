@@ -2,6 +2,7 @@ package com.project.community.domain.study.entity;
 
 import com.project.community.domain.user.entity.UserGroup;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -34,13 +35,12 @@ public class StudyGroup {
 
     private String online;  //온라인 여부
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime studyStartDate;  //시작일
 
     private LocalDateTime createDate;  //등록일
 
     private LocalDateTime updateDate;  //수정일
-
-    private boolean recruiting; // 모집중
 
     private boolean closed; // 모집마감
 
@@ -63,7 +63,7 @@ public class StudyGroup {
     }
     @Builder
     public StudyGroup(Long id, String title, String content, String studyType, String numberOfMembers, String location,
-                      String duration, String online, LocalDateTime studyStartDate, LocalDateTime createDate, LocalDateTime updateDate){
+                      String duration, String online, LocalDateTime studyStartDate, LocalDateTime createDate, LocalDateTime updateDate, Boolean closed){
         this.id = id;
         this.title = title;
         this.content = content;
@@ -75,6 +75,7 @@ public class StudyGroup {
         this.studyStartDate = studyStartDate;
         this.createDate = createDate;
         this.updateDate = updateDate;
+        this.closed = closed;
     }
 
 }
