@@ -5,7 +5,10 @@ import com.project.community.domain.study.dto.response.StudyGroupResponse;
 import com.project.community.domain.study.entity.StudyGroup;
 import com.project.community.domain.study.repository.StudyGroupRepository;
 import com.project.community.domain.study.service.StudyGroupService;
+import com.project.community.domain.user.UserType;
 import com.project.community.domain.user.entity.User;
+import com.project.community.domain.user.entity.UserGroup;
+import com.project.community.domain.user.repository.UserGroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +22,20 @@ import java.util.stream.Collectors;
 public class StudyGroupServiceImpl implements StudyGroupService {
 
     private final StudyGroupRepository studyGroupRepository;
+    private final UserGroupRepository userGroupRepository;
 
     @Override
     public StudyGroupResponse createStudyGroup(User user, StudyGroupRequest studyGroupRequest) {
         StudyGroup studyGroup = StudyGroupRequest.toEntity(studyGroupRequest);
         StudyGroup newStudyGroup = studyGroupRepository.save(studyGroup);
+
+        UserGroup userGroup = UserGroup.builder()
+                .studyGroup(newStudyGroup)
+                .user(user)
+                .userType(UserType.LEADER)
+                .build();
+
+        userGroupRepository.save(userGroup);
 
         return StudyGroupResponse.fromEntity(newStudyGroup);
     }
