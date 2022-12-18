@@ -5,6 +5,9 @@ import com.project.community.domain.study.dto.request.StudyGroupRequest;
 import com.project.community.domain.study.dto.response.StudyGroupResponse;
 import com.project.community.domain.study.service.StudyGroupService;
 import com.project.community.domain.user.entity.User;
+import com.project.community.domain.user.entity.UserGroup;
+import com.project.community.domain.user.repository.UserGroupRepository;
+import com.project.community.domain.user.service.UserGroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -22,7 +25,8 @@ import java.util.List;
 public class StudyGroupController {
 
     private final StudyGroupService studyGroupService;
-
+    private final UserGroupRepository userGroupRepository;
+    private final UserGroupService userGroupService;
     //스터디 그룹 작성 화면 조회
     @GetMapping("/study-group/new")
     public String createStudyGroupForm(@CurrentUser User user, Model model){
@@ -31,7 +35,7 @@ public class StudyGroupController {
         return "study/study-group-form";
     }
 
-    //스터디 그룹 등록
+    //스터디 그룹 등록(리더)
     @PostMapping("/study-group/create")
     public String createStudyGroup(StudyGroupRequest studyGroupRequest, @CurrentUser User user){
         studyGroupService.createStudyGroup(user, studyGroupRequest);
@@ -63,15 +67,14 @@ public class StudyGroupController {
         model.addAttribute(user);
         model.addAttribute("studyGroup", studyGroup);
         model.addAttribute(new StudyGroupRequest());
-        log.info(studyGroup);
-        log.info(studyGroup.getStudyType());
         return "study/study-group-modify-form";
     }
 
     //스터디 그룹 수정
     @PostMapping("/study-group/update/{studyGroupId}")
-    public String updateStudyGroup(StudyGroupRequest studyGroupRequest, @CurrentUser User user, @PathVariable("studyGroupId") Long studyGroupId){
+    public String updateStudyGroup(StudyGroupRequest studyGroupRequest, @CurrentUser User user, @PathVariable("studyGroupId") Long studyGroupId, RedirectAttributes attributes){
         studyGroupService.updateStudyGroup(user, studyGroupId, studyGroupRequest);
+        attributes.addFlashAttribute("message", "스터디 정보를 수정했습니다.");
         return "redirect:/study-group/{studyGroupId}";
     }
 
@@ -81,7 +84,24 @@ public class StudyGroupController {
         studyGroupService.closeStudyGroup(user, studyGroupId);
         attributes.addFlashAttribute("message", "스터디를 마감했습니다");
 
-        return "redirect:/study-group";
+        return "redirect:/study-group/{studyGroupId}";
+    }
+
+    //스터디 그룹 참가 신청
+    @PostMapping("/study-group/{studyGroupId}/enroll")
+    public String newEnrollment(@CurrentUser User user, @PathVariable("studyGroupId")Long studyGroupId){
+
+        UserGroup userGroup = userGroupRepository.findByStudyGroupId(studyGroupId);
+        userGroupService.newEnrollment(userGroup, user);
+        return "redirect:/study-group/{studyGroupId}";
+    }
+
+    //스터디 그룹 참가 신청 취소
+    @PostMapping("/study-group/{studyGroupId}/disenroll")
+    public String cancelEnrollment(@CurrentUser User user, @PathVariable("studyGroupId") Long studyGroupId){
+        UserGroup userGroup = userGroupRepository.findByStudyGroupId(studyGroupId);
+        userGroupService.cancelEnrollment(userGroup, user);
+        return "redirect:/study-group/{studyGroupId}";
     }
 
 }

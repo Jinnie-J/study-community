@@ -34,4 +34,11 @@ public class UserGroupServiceImpl implements UserGroupService {
             enrollmentRepository.save(enrollment);
         }
     }
+
+    @Override
+    public void cancelEnrollment(UserGroup userGroup, User user) {
+       Enrollment enrollment = enrollmentRepository.findByUserGroupAndUser(userGroup, user);
+       userGroup.removeEnrollment(enrollment);
+       enrollmentRepository.delete(enrollment);
+    }
 }

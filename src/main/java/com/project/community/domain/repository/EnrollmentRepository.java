@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
 
     boolean existsByUserGroupAndUser(UserGroup userGroup, User user);
+
+    Enrollment findByUserGroupAndUser(UserGroup userGroup, User user);
 }

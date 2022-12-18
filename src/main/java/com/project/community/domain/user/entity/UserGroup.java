@@ -38,6 +38,11 @@ public class UserGroup {
         enrollment.setUserGroup(this);
     }
 
+    public void removeEnrollment(Enrollment enrollment){
+        this.enrollments.remove(enrollment);
+        enrollment.setUserGroup(null);
+    }
+
     @Builder
     public UserGroup(Long id , User user, StudyGroup studyGroup, UserType userType){
         this.id = id;
