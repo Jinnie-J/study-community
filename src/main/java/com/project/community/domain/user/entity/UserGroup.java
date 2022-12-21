@@ -3,6 +3,7 @@ package com.project.community.domain.user.entity;
 import com.project.community.domain.enrollment.entity.Enrollment;
 import com.project.community.domain.study.entity.StudyGroup;
 import com.project.community.domain.user.UserType;
+import com.project.community.domain.user.dto.UserAccount;
 import lombok.*;
 
 import javax.persistence.*;
@@ -32,6 +33,33 @@ public class UserGroup {
     @OneToMany(mappedBy = "userGroup", cascade = CascadeType.ALL)
     private List<Enrollment> enrollments = new ArrayList<>();
 
+    public boolean isEnrollableFor(UserAccount userAccount){
+        return !isAttended(userAccount) && !isAlreadyEnrolled(userAccount);
+    }
+
+    public boolean isDisenrollableFor(UserAccount userAccount){
+        return !isAttended(userAccount) && isAlreadyEnrolled(userAccount);
+    }
+
+    public boolean isAlreadyEnrolled(UserAccount userAccount){
+        User user = userAccount.getUser();
+        for(Enrollment e : this.enrollments){
+            if(e.getUser().equals(user)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isAttended(UserAccount userAccount){
+        User user = userAccount.getUser();
+        for(Enrollment e : this.enrollments){
+            if(e.getUser().equals(user) && e.isAttended()){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public void addEnrollment(Enrollment enrollment){
         this.enrollments.add(enrollment);
@@ -49,5 +77,13 @@ public class UserGroup {
         this.user = user;
         this.studyGroup = studyGroup;
         this.userType = userType;
+    }
+
+    public void accept(Enrollment enrollment) {
+        enrollment.setAccepted(true);
+    }
+
+    public void reject(Enrollment enrollment) {
+        enrollment.setAccepted(false);
     }
 }

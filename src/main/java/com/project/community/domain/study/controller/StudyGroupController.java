@@ -1,6 +1,7 @@
 package com.project.community.domain.study.controller;
 
 import com.project.community.common.CurrentUser;
+import com.project.community.domain.enrollment.entity.Enrollment;
 import com.project.community.domain.study.dto.request.StudyGroupRequest;
 import com.project.community.domain.study.dto.response.StudyGroupResponse;
 import com.project.community.domain.study.service.StudyGroupService;
@@ -55,7 +56,9 @@ public class StudyGroupController {
     @GetMapping("/study-group/{studyGroupId}")
     public String getStudyGroup(Model model, @PathVariable("studyGroupId") Long studyGroupId){
         StudyGroupResponse studyGroup = studyGroupService.getStudyGroup(studyGroupId);
+        UserGroup userGroup = userGroupRepository.findByStudyGroupId(studyGroupId);
         model.addAttribute("studyGroup", studyGroup);
+        model.addAttribute("userGroup", userGroup);
 
         return "study/study-group-detail";
     }
@@ -103,5 +106,22 @@ public class StudyGroupController {
         userGroupService.cancelEnrollment(userGroup, user);
         return "redirect:/study-group/{studyGroupId}";
     }
+
+    //참가 신청 수락
+    @PostMapping("/study-group/{studyGroupId}/enrollments/{enrollmentId}/accept")
+    public String acceptEnrollment(@PathVariable("userGroupId") UserGroup userGroup,
+                                   @PathVariable("enrollmentId") Enrollment enrollment){
+        userGroupService.acceptEnrollment(userGroup,enrollment);
+        return "redirect:/study-group/{studyGroupId}";
+    }
+
+    //참가 신청 거절
+    @PostMapping("/study-group/{studyGroupId}/enrollments/{enrollmentId}/reject")
+    public String rejectEnrollment(@PathVariable("userGroupId") UserGroup userGroup,
+                                   @PathVariable("enrollmentId") Enrollment enrollment){
+        userGroupService.rejectEnrollment(userGroup,enrollment);
+        return "redirect:/study-group/{studyGroupId}";
+    }
+
 
 }

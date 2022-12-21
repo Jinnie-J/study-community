@@ -1,4 +1,4 @@
-package com.project.community.domain.repository;
+package com.project.community.domain.enrollment.repository;
 
 import com.project.community.domain.enrollment.entity.Enrollment;
 import com.project.community.domain.user.entity.User;

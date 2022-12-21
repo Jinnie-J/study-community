@@ -34,6 +34,10 @@ public class Enrollment {
         this.userGroup = userGroup;
     }
 
+    public void setAccepted(Boolean accepted){
+        this.accepted = accepted;
+    }
+
     @Builder
     public Enrollment(Long id, User user, UserGroup userGroup, LocalDateTime enrolledAt, boolean accepted, boolean attended){
         this.id = id;

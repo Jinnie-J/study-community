@@ -1,7 +1,7 @@
 package com.project.community.domain.user.service.impl;
 
 import com.project.community.domain.enrollment.entity.Enrollment;
-import com.project.community.domain.repository.EnrollmentRepository;
+import com.project.community.domain.enrollment.repository.EnrollmentRepository;
 import com.project.community.domain.user.entity.User;
 import com.project.community.domain.user.entity.UserGroup;
 import com.project.community.domain.user.service.UserGroupService;
@@ -38,7 +38,19 @@ public class UserGroupServiceImpl implements UserGroupService {
     @Override
     public void cancelEnrollment(UserGroup userGroup, User user) {
        Enrollment enrollment = enrollmentRepository.findByUserGroupAndUser(userGroup, user);
-       userGroup.removeEnrollment(enrollment);
-       enrollmentRepository.delete(enrollment);
+       if(!enrollment.isAttended()) {
+           userGroup.removeEnrollment(enrollment);
+           enrollmentRepository.delete(enrollment);
+       }
+    }
+
+    @Override
+    public void acceptEnrollment(UserGroup userGroup, Enrollment enrollment) {
+        userGroup.accept(enrollment);
+    }
+
+    @Override
+    public void rejectEnrollment(UserGroup userGroup, Enrollment enrollment) {
+        userGroup.reject(enrollment);
     }
 }
