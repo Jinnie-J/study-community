@@ -34,11 +34,11 @@ public class UserGroup {
     private List<Enrollment> enrollments = new ArrayList<>();
 
     public boolean isEnrollableFor(UserAccount userAccount){
-        return !isAttended(userAccount) && !isAlreadyEnrolled(userAccount);
+        return !isAlreadyEnrolled(userAccount);
     }
 
     public boolean isDisenrollableFor(UserAccount userAccount){
-        return !isAttended(userAccount) && isAlreadyEnrolled(userAccount);
+        return isAlreadyEnrolled(userAccount);
     }
 
     public boolean isAlreadyEnrolled(UserAccount userAccount){
@@ -51,10 +51,10 @@ public class UserGroup {
         return false;
     }
 
-    public boolean isAttended(UserAccount userAccount){
+    public boolean isAccepted(UserAccount userAccount){
         User user = userAccount.getUser();
         for(Enrollment e : this.enrollments){
-            if(e.getUser().equals(user) && e.isAttended()){
+            if(e.getUser().equals(user) && e.isAccepted()){
                 return true;
             }
         }
@@ -69,6 +69,21 @@ public class UserGroup {
     public void removeEnrollment(Enrollment enrollment){
         this.enrollments.remove(enrollment);
         enrollment.setUserGroup(null);
+    }
+
+    public boolean isAcceptable(Enrollment enrollment){
+        return this.enrollments.contains(enrollment)
+                && !enrollment.isAccepted();
+    }
+
+    public boolean isRejectable(Enrollment enrollment){
+        return this.enrollments.contains(enrollment)
+                && enrollment.isAccepted();
+    }
+
+    public boolean isLeader(UserAccount userAccount){
+        User user = userAccount.getUser();
+        return this.userType == UserType.LEADER && user.equals(this.getUser());
     }
 
     @Builder

@@ -28,7 +28,7 @@ public class Enrollment {
 
     private boolean accepted;
 
-    private boolean attended;
+    //private boolean attended;
 
     public void setUserGroup(UserGroup userGroup) {
         this.userGroup = userGroup;
@@ -39,12 +39,11 @@ public class Enrollment {
     }
 
     @Builder
-    public Enrollment(Long id, User user, UserGroup userGroup, LocalDateTime enrolledAt, boolean accepted, boolean attended){
+    public Enrollment(Long id, User user, UserGroup userGroup, LocalDateTime enrolledAt, boolean accepted){
         this.id = id;
         this.user = user;
         this.userGroup = userGroup;
         this.enrolledAt = enrolledAt;
         this.accepted = accepted;
-        this.attended = attended;
     }
 }

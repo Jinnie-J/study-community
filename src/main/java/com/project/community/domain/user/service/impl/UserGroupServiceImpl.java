@@ -38,10 +38,8 @@ public class UserGroupServiceImpl implements UserGroupService {
     @Override
     public void cancelEnrollment(UserGroup userGroup, User user) {
        Enrollment enrollment = enrollmentRepository.findByUserGroupAndUser(userGroup, user);
-       if(!enrollment.isAttended()) {
-           userGroup.removeEnrollment(enrollment);
-           enrollmentRepository.delete(enrollment);
-       }
+       userGroup.removeEnrollment(enrollment);
+       enrollmentRepository.delete(enrollment);
     }
 
     @Override
