@@ -63,6 +63,17 @@ public class StudyGroupController {
         return "study/study-group-detail";
     }
 
+    //스터디 그룹 상세 - 모집현황 조회
+    @GetMapping("/study-group/{studyGroupId}/people")
+    public String getStudyGroupPeoPle(Model model, @PathVariable("studyGroupId") Long studyGroupId){
+        StudyGroupResponse studyGroup = studyGroupService.getStudyGroup(studyGroupId);
+        UserGroup userGroup = userGroupRepository.findByStudyGroupId(studyGroupId);
+        model.addAttribute("studyGroup", studyGroup);
+        model.addAttribute("userGroup", userGroup);
+
+        return "study/study-group-people";
+    }
+
     //스터디 그룹 수정 폼
     @GetMapping("/study-group/update/{studyGroupId}")
     public String updateStudyGroup(@PathVariable("studyGroupId") Long studyGroupId, @CurrentUser User user, Model model) {
@@ -108,19 +119,19 @@ public class StudyGroupController {
     }
 
     //참가 신청 수락
-    @PostMapping("/study-group/{studyGroupId}/enrollments/{enrollmentId}/accept")
+    @GetMapping("/study-group/{studyGroupId}/user-group/{userGroupId}/enrollments/{enrollmentId}/accept")
     public String acceptEnrollment(@PathVariable("userGroupId") UserGroup userGroup,
                                    @PathVariable("enrollmentId") Enrollment enrollment){
         userGroupService.acceptEnrollment(userGroup,enrollment);
-        return "redirect:/study-group/{studyGroupId}";
+        return "redirect:/study-group/{studyGroupId}/people";
     }
 
     //참가 신청 거절
-    @PostMapping("/study-group/{studyGroupId}/enrollments/{enrollmentId}/reject")
+    @GetMapping("/study-group/{studyGroupId}/user-group/{userGroupId}/enrollments/{enrollmentId}/reject")
     public String rejectEnrollment(@PathVariable("userGroupId") UserGroup userGroup,
                                    @PathVariable("enrollmentId") Enrollment enrollment){
         userGroupService.rejectEnrollment(userGroup,enrollment);
-        return "redirect:/study-group/{studyGroupId}";
+        return "redirect:/study-group/{studyGroupId}/people";
     }
 
 
