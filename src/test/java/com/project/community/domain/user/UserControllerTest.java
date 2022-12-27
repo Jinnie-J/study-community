@@ -91,4 +91,40 @@ public class UserControllerTest {
                 .andExpect(redirectedUrl("/"))
                 .andExpect(unauthenticated());
     }
+
+    @DisplayName("회원 가입 화면 조회 테스트")
+    @Test
+    void signUpForm() throws Exception{
+        mockMvc.perform(get("/sign-up"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("user/sign-up"))
+                .andExpect(model().attributeExists("signUpForm"))
+                .andExpect(unauthenticated());
+    }
+
+    @DisplayName("회원 가입 처리 - 입력값 오류")
+    @Test
+    void signUpSubmit_wrong_input() throws Exception{
+        mockMvc.perform(post("/sign-up")
+                .param("nickname","test")
+                .param("email","emailtest")
+                .param("password", "12345")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("user/sign-up"))
+                .andExpect(unauthenticated());
+    }
+
+    @DisplayName("회원 가입 처리 - 입력값 정상")
+    @Test
+    void signUpSubmit_correct_input() throws Exception{
+        mockMvc.perform(post("/sign-up")
+                .param("nickname", "test")
+                .param("email","test@email.com")
+                .param("password","12345678")
+                .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"))
+                .andExpect(authenticated().withUsername("test"));
+    }
 }
