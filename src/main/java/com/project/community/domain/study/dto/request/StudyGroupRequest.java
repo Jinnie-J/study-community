@@ -21,6 +21,8 @@ public class StudyGroupRequest {
 
     private String content;
 
+    private String createdBy;
+
     private String studyType;
 
     private String numberOfMembers;
@@ -45,6 +47,7 @@ public class StudyGroupRequest {
         return StudyGroup.builder()
                 .title(studyGroupRequest.getTitle())
                 .content(studyGroupRequest.getContent())
+                .createdBy(studyGroupRequest.getCreatedBy())
                 .studyType(studyGroupRequest.getStudyType())
                 .numberOfMembers(studyGroupRequest.getNumberOfMembers())
                 .location(studyGroupRequest.getLocation())

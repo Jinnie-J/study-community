@@ -28,8 +28,6 @@ public class Enrollment {
 
     private boolean accepted;
 
-    //private boolean attended;
-
     public void setUserGroup(UserGroup userGroup) {
         this.userGroup = userGroup;
     }

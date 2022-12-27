@@ -26,6 +26,7 @@ public class StudyGroupServiceImpl implements StudyGroupService {
 
     @Override
     public StudyGroupResponse createStudyGroup(User user, StudyGroupRequest studyGroupRequest) {
+        studyGroupRequest.setCreatedBy(user.getNickname());
         StudyGroup studyGroup = StudyGroupRequest.toEntity(studyGroupRequest);
         StudyGroup newStudyGroup = studyGroupRepository.save(studyGroup);
 

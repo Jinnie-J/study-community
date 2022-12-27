@@ -23,6 +23,8 @@ public class StudyGroup {
     @Column(nullable = false)
     private String title;  //제목
 
+    private String createdBy; //작성자
+
     private String content;  //내용
 
     private String studyType; //스터디 유형 (프로젝트, 스터디)
@@ -51,10 +53,11 @@ public class StudyGroup {
         this.closed = true;
     }
 
-    public void update(String title, String content, String studyType, String numberOfMembers, String location, String duration, String online, LocalDateTime studyStartDate){
+    public void update(String title, String content, String createdBy, String studyType, String numberOfMembers, String location, String duration, LocalDateTime studyStartDate){
         this.title = title;
         this.content = content;
         this.studyType = studyType;
+        this.createdBy = createdBy;
         this.numberOfMembers = numberOfMembers;
         this.location = location;
         this.duration = duration;
@@ -62,11 +65,12 @@ public class StudyGroup {
         this.studyStartDate = studyStartDate;
     }
     @Builder
-    public StudyGroup(Long id, String title, String content, String studyType, String numberOfMembers, String location,
+    public StudyGroup(Long id, String title, String createdBy, String content, String studyType, String numberOfMembers, String location,
                       String duration, String online, LocalDateTime studyStartDate, LocalDateTime createDate, LocalDateTime updateDate, Boolean closed){
         this.id = id;
         this.title = title;
         this.content = content;
+        this.createdBy = createdBy;
         this.studyType = studyType;
         this.numberOfMembers = numberOfMembers;
         this.location = location;

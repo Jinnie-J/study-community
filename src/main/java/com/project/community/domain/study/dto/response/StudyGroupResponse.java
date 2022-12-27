@@ -22,6 +22,8 @@ public class StudyGroupResponse {
 
     private String content;
 
+    private String createdBy;
+
     private String studyType;
 
     private String numberOfMembers;
@@ -45,6 +47,7 @@ public class StudyGroupResponse {
                 .studyGroupId(studyGroup.getId())
                 .title(studyGroup.getTitle())
                 .content(studyGroup.getContent())
+                .createdBy(studyGroup.getCreatedBy())
                 .studyType(studyGroup.getStudyType())
                 .numberOfMembers(studyGroup.getNumberOfMembers())
                 .location(studyGroup.getLocation())

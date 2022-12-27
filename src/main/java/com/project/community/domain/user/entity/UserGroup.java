@@ -34,7 +34,7 @@ public class UserGroup {
     private List<Enrollment> enrollments = new ArrayList<>();
 
     public boolean isEnrollableFor(UserAccount userAccount){
-        return !isAlreadyEnrolled(userAccount);
+        return !isAlreadyEnrolled(userAccount) && !isLeader(userAccount);
     }
 
     public boolean isDisenrollableFor(UserAccount userAccount){
