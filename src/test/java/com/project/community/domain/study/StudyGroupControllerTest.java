@@ -173,7 +173,7 @@ public class StudyGroupControllerTest {
 
         StudyGroup studyGroup = studyGroupRepository.findById(18L).orElseThrow(IllegalArgumentException::new);
         mockMvc.perform(post("/study-group/close/18")
-                .with(csrf()))
+                        .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/study-group/18"))
                 .andExpect(flash().attributeExists("message"));
