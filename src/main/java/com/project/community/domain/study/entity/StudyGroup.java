@@ -1,5 +1,6 @@
 package com.project.community.domain.study.entity;
 
+import com.project.community.domain.skill.entity.Skill;
 import com.project.community.domain.user.entity.UserGroup;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -8,6 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -37,6 +39,9 @@ public class StudyGroup {
 
     private String online;  //온라인 여부
 
+    @ManyToMany
+    private Set<Skill> skills;
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime studyStartDate;  //시작일
 
@@ -53,7 +58,7 @@ public class StudyGroup {
         this.closed = true;
     }
 
-    public void update(String title, String content, String createdBy, String studyType, String numberOfMembers, String location, String duration, LocalDateTime studyStartDate){
+    public void update(String title, String content, String createdBy, String studyType, String numberOfMembers, String location, String duration, String online, LocalDateTime studyStartDate){
         this.title = title;
         this.content = content;
         this.studyType = studyType;
@@ -66,7 +71,7 @@ public class StudyGroup {
     }
     @Builder
     public StudyGroup(Long id, String title, String createdBy, String content, String studyType, String numberOfMembers, String location,
-                      String duration, String online, LocalDateTime studyStartDate, LocalDateTime createDate, LocalDateTime updateDate, Boolean closed){
+                      String duration, String online, Set skills, LocalDateTime studyStartDate, LocalDateTime createDate, LocalDateTime updateDate, Boolean closed){
         this.id = id;
         this.title = title;
         this.content = content;
@@ -76,6 +81,7 @@ public class StudyGroup {
         this.location = location;
         this.duration = duration;
         this.online = online;
+        this.skills = skills;
         this.studyStartDate = studyStartDate;
         this.createDate = createDate;
         this.updateDate = updateDate;

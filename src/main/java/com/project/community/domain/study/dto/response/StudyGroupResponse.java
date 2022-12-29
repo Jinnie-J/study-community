@@ -1,5 +1,6 @@
 package com.project.community.domain.study.dto.response;
 
+import com.project.community.domain.skill.entity.Skill;
 import com.project.community.domain.study.entity.StudyGroup;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @Builder
@@ -34,6 +36,8 @@ public class StudyGroupResponse {
 
     private String online;
 
+    private Set<Skill> skills;
+
     private LocalDateTime studyStartDate;
 
     private LocalDateTime createDate;
@@ -53,6 +57,7 @@ public class StudyGroupResponse {
                 .location(studyGroup.getLocation())
                 .duration(studyGroup.getDuration())
                 .online(studyGroup.getOnline())
+                .skills(studyGroup.getSkills())
                 .studyStartDate(studyGroup.getStudyStartDate())
                 .closed(studyGroup.isClosed())
                 .build();
