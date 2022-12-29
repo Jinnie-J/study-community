@@ -58,7 +58,7 @@ public class StudyGroup {
         this.closed = true;
     }
 
-    public void update(String title, String content, String createdBy, String studyType, String numberOfMembers, String location, String duration, String online, LocalDateTime studyStartDate){
+    public void update(String title, String content, String createdBy, String studyType, String numberOfMembers, String location, String duration, LocalDateTime studyStartDate){
         this.title = title;
         this.content = content;
         this.studyType = studyType;
@@ -66,8 +66,8 @@ public class StudyGroup {
         this.numberOfMembers = numberOfMembers;
         this.location = location;
         this.duration = duration;
-        this.online = online;
         this.studyStartDate = studyStartDate;
+        this.online = online;
     }
     @Builder
     public StudyGroup(Long id, String title, String createdBy, String content, String studyType, String numberOfMembers, String location,

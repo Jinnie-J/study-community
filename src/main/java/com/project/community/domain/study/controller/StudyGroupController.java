@@ -1,6 +1,7 @@
 package com.project.community.domain.study.controller;
 
 import com.project.community.common.CurrentUser;
+import com.project.community.domain.skill.entity.Skill;
 import com.project.community.domain.study.dto.request.StudyGroupRequest;
 import com.project.community.domain.study.dto.response.StudyGroupResponse;
 import com.project.community.domain.study.service.StudyGroupService;
@@ -8,16 +9,16 @@ import com.project.community.domain.user.entity.User;
 import com.project.community.domain.user.entity.UserGroup;
 import com.project.community.domain.user.repository.UserGroupRepository;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -36,7 +37,7 @@ public class StudyGroupController {
 
     //스터디 그룹 등록(리더)
     @PostMapping("/study-group/create")
-    public String createStudyGroup(@Valid StudyGroupRequest studyGroupRequest, Errors errors, @CurrentUser User user, Model model){
+    public String createStudyGroup(@Valid StudyGroupRequest studyGroupRequest, Errors errors, @CurrentUser User user, Model model) throws ParseException, CloneNotSupportedException {
 
         if(errors.hasErrors()){
             model.addAttribute(user);
@@ -84,6 +85,9 @@ public class StudyGroupController {
         model.addAttribute(user);
         model.addAttribute("studyGroup", studyGroup);
         model.addAttribute(new StudyGroupRequest());
+
+        Set<Skill> skills = studyGroupService.getSkills(studyGroupId);
+        model.addAttribute("skills", skills.stream().map(Skill::getTitle).collect(Collectors.toList()));
         return "study/study-group-modify-form";
     }
 
