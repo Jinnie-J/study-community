@@ -19,6 +19,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,16 +35,17 @@ public class StudyGroupServiceImpl implements StudyGroupService {
     @Override
     public StudyGroupResponse createStudyGroup(User user, StudyGroupRequest studyGroupRequest) throws ParseException, CloneNotSupportedException {
 
-        // TODO: 기술 스택 추가 하는 로직 개선 하기
-        StudyGroupRequest tmp = (StudyGroupRequest) studyGroupRequest.clone();
+        // TODO: 기술 스택 추가 하는 로직 개선 하기 (체크박스로 만들어서 parse 과정 없이 insert)
+        StudyGroupRequest request = (StudyGroupRequest) studyGroupRequest.clone();
         Set<Skill> skills = new HashSet<>();
         studyGroupRequest.setSkills(skills);
 
         studyGroupRequest.setCreatedBy(user.getNickname());
+        studyGroupRequest.setCreateDate(LocalDateTime.now());
         StudyGroup studyGroup = StudyGroupRequest.toEntity(studyGroupRequest);
         StudyGroup newStudyGroup = studyGroupRepository.save(studyGroup);
 
-        parseSkillJson(tmp, newStudyGroup.getId());
+        parseSkillJson(request, newStudyGroup.getId());
 
         UserGroup userGroup = UserGroup.builder()
                 .studyGroup(newStudyGroup)
@@ -75,14 +77,17 @@ public class StudyGroupServiceImpl implements StudyGroupService {
 
     //수정 - 리더 권한 체크하기
     @Override
-    public void updateStudyGroup(User user, Long studyGroupId, StudyGroupRequest studyGroupRequest) {
+    public void updateStudyGroup(User user, Long studyGroupId, StudyGroupRequest studyGroupRequest) throws ParseException {
 
         StudyGroup studyGroup = studyGroupRepository.findById(studyGroupId)
                 .orElseThrow(() -> new IllegalArgumentException(studyGroupId + "에 해당하는 스터디가 없습니다."));
 
+        studyGroup.getSkills().clear();
+        parseSkillJson(studyGroupRequest, studyGroupId);
+
         studyGroup.update(studyGroupRequest.getTitle(), studyGroupRequest.getContent(), studyGroupRequest.getStudyType(),
-                studyGroupRequest.getLocation(), studyGroupRequest.getDuration(), studyGroupRequest.getNumberOfMembers(),
-                studyGroupRequest.getOnline(), studyGroupRequest.getStudyStartDate());
+                studyGroupRequest.getNumberOfMembers(),studyGroupRequest.getLocation(), studyGroupRequest.getDuration(), studyGroupRequest.getStudyStartDate(),
+                studyGroupRequest.getOnline());
     }
 
     @Override
