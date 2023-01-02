@@ -17,7 +17,7 @@ public class Enrollment {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_grou_id")
+    @JoinColumn(name = "user_group_id")
     private UserGroup userGroup;
 
     @ManyToOne(fetch = FetchType.LAZY)
