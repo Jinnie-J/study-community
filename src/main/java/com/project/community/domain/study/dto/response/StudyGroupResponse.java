@@ -1,5 +1,6 @@
 package com.project.community.domain.study.dto.response;
 
+import com.project.community.domain.location.entity.Location;
 import com.project.community.domain.skill.entity.Skill;
 import com.project.community.domain.study.entity.StudyGroup;
 import lombok.AllArgsConstructor;
@@ -30,7 +31,7 @@ public class StudyGroupResponse {
 
     private String numberOfMembers;
 
-    private String location;
+    private Location location;
 
     private String duration;
 

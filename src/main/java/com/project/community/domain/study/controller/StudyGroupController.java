@@ -1,7 +1,12 @@
 package com.project.community.domain.study.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.community.common.CurrentUser;
+import com.project.community.domain.location.entity.Location;
+import com.project.community.domain.location.repository.LocationRepository;
 import com.project.community.domain.skill.entity.Skill;
+import com.project.community.domain.skill.repository.SkillRepository;
 import com.project.community.domain.study.dto.request.StudyGroupRequest;
 import com.project.community.domain.study.dto.response.StudyGroupResponse;
 import com.project.community.domain.study.service.StudyGroupService;
@@ -26,12 +31,24 @@ public class StudyGroupController {
 
     private final StudyGroupService studyGroupService;
     private final UserGroupRepository userGroupRepository;
+    private final SkillRepository skillRepository;
+    private final LocationRepository locationRepository;
+    private final ObjectMapper objectMapper;
 
     //스터디 그룹 작성 화면 조회
     @GetMapping("/study-group/new")
-    public String createStudyGroupForm(@CurrentUser User user, Model model){
+    public String createStudyGroupForm(@CurrentUser User user, Model model) throws JsonProcessingException {
         model.addAttribute(user);
         model.addAttribute(new StudyGroupRequest());
+
+        //기술 리스트
+        List<String> allSkills = skillRepository.findAll().stream().map(Skill::getTitle).collect(Collectors.toList());
+        model.addAttribute("skillList", objectMapper.writeValueAsString(allSkills));
+
+        //지역 리스트
+        List<Location> allLocations = locationRepository.findAll();
+        model.addAttribute("locationList", allLocations);
+
         return "study/study-group-form";
     }
 
@@ -80,7 +97,7 @@ public class StudyGroupController {
 
     //스터디 그룹 수정 폼
     @GetMapping("/study-group/update/{studyGroupId}")
-    public String updateStudyGroup(@PathVariable("studyGroupId") Long studyGroupId, @CurrentUser User user, Model model) {
+    public String updateStudyGroup(@PathVariable("studyGroupId") Long studyGroupId, @CurrentUser User user, Model model) throws JsonProcessingException {
         StudyGroupResponse studyGroup = studyGroupService.getStudyGroup(studyGroupId);
         model.addAttribute(user);
         model.addAttribute("studyGroup", studyGroup);
@@ -88,12 +105,18 @@ public class StudyGroupController {
 
         Set<Skill> skills = studyGroupService.getSkills(studyGroupId);
         model.addAttribute("skills", skills.stream().map(Skill::getTitle).collect(Collectors.toList()));
+
+        List<String> allSkills = skillRepository.findAll().stream().map(Skill::getTitle).collect(Collectors.toList());
+        model.addAttribute("skillList", objectMapper.writeValueAsString(allSkills));
+
+        List<Location> allLocations = locationRepository.findAll();
+        model.addAttribute("locationList", allLocations);
         return "study/study-group-modify-form";
     }
 
     //스터디 그룹 수정
     @PostMapping("/study-group/update/{studyGroupId}")
-    public String updateStudyGroup(@Valid StudyGroupRequest studyGroupRequest, Errors errors, @CurrentUser User user,@PathVariable("studyGroupId") Long studyGroupId, RedirectAttributes attributes){
+    public String updateStudyGroup(@Valid StudyGroupRequest studyGroupRequest, Errors errors, @CurrentUser User user,@PathVariable("studyGroupId") Long studyGroupId, RedirectAttributes attributes) throws ParseException {
 
         if(errors.hasErrors()){
             attributes.addFlashAttribute("message", "제목을 입력하세요.");

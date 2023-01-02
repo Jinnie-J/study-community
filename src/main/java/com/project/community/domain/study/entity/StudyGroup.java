@@ -1,5 +1,6 @@
 package com.project.community.domain.study.entity;
 
+import com.project.community.domain.location.entity.Location;
 import com.project.community.domain.skill.entity.Skill;
 import com.project.community.domain.user.entity.UserGroup;
 import lombok.*;
@@ -33,7 +34,9 @@ public class StudyGroup {
 
     private String numberOfMembers;  //모집 인원
 
-    private String location; //지역
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id")
+    private Location location; //지역
 
     private String duration;  //기간
 
@@ -58,11 +61,11 @@ public class StudyGroup {
         this.closed = true;
     }
 
-    public void update(String title, String content, String createdBy, String studyType, String numberOfMembers, String location, String duration, LocalDateTime studyStartDate){
+    public void update(String title, String content, String studyType, String numberOfMembers,
+                       Location location, String duration, LocalDateTime studyStartDate, String online){
         this.title = title;
         this.content = content;
         this.studyType = studyType;
-        this.createdBy = createdBy;
         this.numberOfMembers = numberOfMembers;
         this.location = location;
         this.duration = duration;
@@ -70,7 +73,7 @@ public class StudyGroup {
         this.online = online;
     }
     @Builder
-    public StudyGroup(Long id, String title, String createdBy, String content, String studyType, String numberOfMembers, String location,
+    public StudyGroup(Long id, String title, String createdBy, String content, String studyType, String numberOfMembers, Location location,
                       String duration, String online, Set skills, LocalDateTime studyStartDate, LocalDateTime createDate, LocalDateTime updateDate, Boolean closed){
         this.id = id;
         this.title = title;

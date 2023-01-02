@@ -18,7 +18,7 @@ public interface StudyGroupService {
 
     StudyGroupResponse getStudyGroup(Long studyGroupId);
 
-    void updateStudyGroup(User user, Long studyGroupId, StudyGroupRequest studyGroupRequest);
+    void updateStudyGroup(User user, Long studyGroupId, StudyGroupRequest studyGroupRequest) throws ParseException;
 
     void closeStudyGroup(User user, Long studyGroupId);
 
