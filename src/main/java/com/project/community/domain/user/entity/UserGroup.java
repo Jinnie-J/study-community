@@ -2,7 +2,7 @@ package com.project.community.domain.user.entity;
 
 import com.project.community.domain.enrollment.entity.Enrollment;
 import com.project.community.domain.study.entity.StudyGroup;
-import com.project.community.domain.user.UserType;
+import com.project.community.domain.user.enums.UserType;
 import com.project.community.domain.user.dto.UserAccount;
 import lombok.*;
 

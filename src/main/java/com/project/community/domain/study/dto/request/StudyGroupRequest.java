@@ -2,6 +2,9 @@ package com.project.community.domain.study.dto.request;
 
 import com.project.community.domain.location.entity.Location;
 import com.project.community.domain.study.entity.StudyGroup;
+import com.project.community.domain.study.enums.ContactType;
+import com.project.community.domain.study.enums.MeetingType;
+import com.project.community.domain.study.enums.StudyType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,7 +28,7 @@ public class StudyGroupRequest implements Cloneable{
 
     private String createdBy;
 
-    private String studyType;
+    private StudyType studyType;
 
     private String numberOfMembers;
 
@@ -33,7 +36,9 @@ public class StudyGroupRequest implements Cloneable{
 
     private String duration;
 
-    private String online;
+    private MeetingType meetingType;
+
+    private ContactType contactType;
 
     private Object skills;
 
@@ -52,13 +57,15 @@ public class StudyGroupRequest implements Cloneable{
                 .title(studyGroupRequest.getTitle())
                 .content(studyGroupRequest.getContent())
                 .createdBy(studyGroupRequest.getCreatedBy())
+                .createDate(studyGroupRequest.getCreateDate())
                 .studyType(studyGroupRequest.getStudyType())
                 .numberOfMembers(studyGroupRequest.getNumberOfMembers())
                 .location(studyGroupRequest.getLocation())
                 .duration(studyGroupRequest.getDuration())
-                .online(studyGroupRequest.getOnline())
+                .meetingType(studyGroupRequest.getMeetingType())
                 .skills((Set) studyGroupRequest.getSkills())
                 .studyStartDate(studyGroupRequest.getStudyStartDate())
+                .contactType(studyGroupRequest.getContactType())
                 .closed(studyGroupRequest.isClosed())
                 .build();
     }

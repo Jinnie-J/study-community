@@ -2,6 +2,9 @@ package com.project.community.domain.study.entity;
 
 import com.project.community.domain.location.entity.Location;
 import com.project.community.domain.skill.entity.Skill;
+import com.project.community.domain.study.enums.ContactType;
+import com.project.community.domain.study.enums.MeetingType;
+import com.project.community.domain.study.enums.StudyType;
 import com.project.community.domain.user.entity.UserGroup;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,8 +33,6 @@ public class StudyGroup {
 
     private String content;  //내용
 
-    private String studyType; //스터디 유형 (프로젝트, 스터디)
-
     private String numberOfMembers;  //모집 인원
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -40,8 +41,13 @@ public class StudyGroup {
 
     private String duration;  //기간
 
-    private String online;  //온라인 여부
+    @Enumerated(EnumType.STRING)
+    private StudyType studyType; //스터디 유형 (프로젝트, 스터디)
+    @Enumerated(EnumType.STRING)
+    private MeetingType meetingType;  //온라인 여부
 
+    @Enumerated(EnumType.STRING)
+    private ContactType contactType;  //연락 방법
     @ManyToMany
     private Set<Skill> skills;
 
@@ -61,8 +67,8 @@ public class StudyGroup {
         this.closed = true;
     }
 
-    public void update(String title, String content, String studyType, String numberOfMembers,
-                       Location location, String duration, LocalDateTime studyStartDate, String online){
+    public void update(String title, String content, StudyType studyType, String numberOfMembers,
+                       Location location, String duration, LocalDateTime studyStartDate, MeetingType meetingType, ContactType contactType){
         this.title = title;
         this.content = content;
         this.studyType = studyType;
@@ -70,11 +76,12 @@ public class StudyGroup {
         this.location = location;
         this.duration = duration;
         this.studyStartDate = studyStartDate;
-        this.online = online;
+        this.meetingType = meetingType;
+        this.contactType = contactType;
     }
     @Builder
-    public StudyGroup(Long id, String title, String createdBy, String content, String studyType, String numberOfMembers, Location location,
-                      String duration, String online, Set skills, LocalDateTime studyStartDate, LocalDateTime createDate, LocalDateTime updateDate, Boolean closed){
+    public StudyGroup(Long id, String title, String createdBy, String content, StudyType studyType, String numberOfMembers, Location location, ContactType contactType,
+                      String duration, MeetingType meetingType, Set skills, LocalDateTime studyStartDate, LocalDateTime createDate, LocalDateTime updateDate, Boolean closed){
         this.id = id;
         this.title = title;
         this.content = content;
@@ -83,11 +90,12 @@ public class StudyGroup {
         this.numberOfMembers = numberOfMembers;
         this.location = location;
         this.duration = duration;
-        this.online = online;
+        this.meetingType = meetingType;
         this.skills = skills;
         this.studyStartDate = studyStartDate;
         this.createDate = createDate;
         this.updateDate = updateDate;
+        this.contactType = contactType;
         this.closed = closed;
     }
 

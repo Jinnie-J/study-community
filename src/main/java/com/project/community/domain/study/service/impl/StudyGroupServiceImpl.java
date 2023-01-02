@@ -7,7 +7,7 @@ import com.project.community.domain.study.dto.response.StudyGroupResponse;
 import com.project.community.domain.study.entity.StudyGroup;
 import com.project.community.domain.study.repository.StudyGroupRepository;
 import com.project.community.domain.study.service.StudyGroupService;
-import com.project.community.domain.user.UserType;
+import com.project.community.domain.user.enums.UserType;
 import com.project.community.domain.user.entity.User;
 import com.project.community.domain.user.entity.UserGroup;
 import com.project.community.domain.user.repository.UserGroupRepository;
@@ -87,7 +87,7 @@ public class StudyGroupServiceImpl implements StudyGroupService {
 
         studyGroup.update(studyGroupRequest.getTitle(), studyGroupRequest.getContent(), studyGroupRequest.getStudyType(),
                 studyGroupRequest.getNumberOfMembers(),studyGroupRequest.getLocation(), studyGroupRequest.getDuration(), studyGroupRequest.getStudyStartDate(),
-                studyGroupRequest.getOnline());
+                studyGroupRequest.getMeetingType(), studyGroup.getContactType());
     }
 
     @Override
