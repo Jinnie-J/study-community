@@ -1,5 +1,7 @@
 package com.project.community.domain.study.service.impl;
 
+import com.project.community.domain.skill.entity.Skill;
+import com.project.community.domain.skill.repository.SkillRepository;
 import com.project.community.domain.study.dto.request.StudyGroupRequest;
 import com.project.community.domain.study.dto.response.StudyGroupResponse;
 import com.project.community.domain.study.entity.StudyGroup;
@@ -10,10 +12,14 @@ import com.project.community.domain.user.entity.User;
 import com.project.community.domain.user.entity.UserGroup;
 import com.project.community.domain.user.repository.UserGroupRepository;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,12 +29,21 @@ public class StudyGroupServiceImpl implements StudyGroupService {
 
     private final StudyGroupRepository studyGroupRepository;
     private final UserGroupRepository userGroupRepository;
+    private final SkillRepository skillRepository;
 
     @Override
-    public StudyGroupResponse createStudyGroup(User user, StudyGroupRequest studyGroupRequest) {
+    public StudyGroupResponse createStudyGroup(User user, StudyGroupRequest studyGroupRequest) throws ParseException, CloneNotSupportedException {
+
+        // TODO: 기술 스택 추가 하는 로직 개선 하기
+        StudyGroupRequest tmp = (StudyGroupRequest) studyGroupRequest.clone();
+        Set<Skill> skills = new HashSet<>();
+        studyGroupRequest.setSkills(skills);
+
         studyGroupRequest.setCreatedBy(user.getNickname());
         StudyGroup studyGroup = StudyGroupRequest.toEntity(studyGroupRequest);
         StudyGroup newStudyGroup = studyGroupRepository.save(studyGroup);
+
+        parseSkillJson(tmp, newStudyGroup.getId());
 
         UserGroup userGroup = UserGroup.builder()
                 .studyGroup(newStudyGroup)
@@ -84,5 +99,34 @@ public class StudyGroupServiceImpl implements StudyGroupService {
 
         return studyGroup;
 
+    }
+
+    void parseSkillJson(StudyGroupRequest studyGroupRequest, Long studyGroupId) throws ParseException {
+        JSONParser parser = new JSONParser();
+        JSONArray array = (JSONArray) parser.parse(studyGroupRequest.getSkills().toString());
+
+        Set<Skill> skills = new HashSet<>();
+        for (Object arr : array) {
+            JSONObject jsonObj = (JSONObject) arr;
+            String title = (String) jsonObj.get("value");
+            Skill skill = skillRepository.findByTitle(title).orElseGet(() -> skillRepository.save(Skill.builder()
+                    .title(title)
+                    .build()));
+            skills.add(skill);
+            studyGroupRequest.setSkills(skills);
+            addSkill(studyGroupRequest, skill, studyGroupId);
+        }
+    }
+
+    @Override
+    public void addSkill(StudyGroupRequest studyGroupRequest, Skill skill, Long studyGroupId) {
+        Optional<StudyGroup> studyGroupById = studyGroupRepository.findById(studyGroupId);
+        studyGroupById.ifPresent(a -> a.getSkills().add(skill));
+    }
+
+    @Override
+    public Set<Skill> getSkills(Long studyGroupId) {
+        Optional<StudyGroup> studyGroupById = studyGroupRepository.findById(studyGroupId);
+        return studyGroupById.orElseThrow().getSkills();
     }
 }

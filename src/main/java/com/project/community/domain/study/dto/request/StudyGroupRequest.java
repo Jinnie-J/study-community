@@ -9,12 +9,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class StudyGroupRequest {
+public class StudyGroupRequest implements Cloneable{
 
     @NotBlank
     private String title;
@@ -32,6 +33,8 @@ public class StudyGroupRequest {
     private String duration;
 
     private String online;
+
+    private Object skills;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime studyStartDate;
@@ -53,9 +56,15 @@ public class StudyGroupRequest {
                 .location(studyGroupRequest.getLocation())
                 .duration(studyGroupRequest.getDuration())
                 .online(studyGroupRequest.getOnline())
+                .skills((Set) studyGroupRequest.getSkills())
                 .studyStartDate(studyGroupRequest.getStudyStartDate())
                 .closed(studyGroupRequest.isClosed())
                 .build();
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException{
+        return super.clone();
     }
 
 
