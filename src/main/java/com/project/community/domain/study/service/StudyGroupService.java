@@ -24,7 +24,7 @@ public interface StudyGroupService {
 
     StudyGroup validateDeleteStudyGroup(User user, Long studyGroupId);
 
-    void addSkill(StudyGroupRequest studyGroupRequest, Skill skill,Long studyGroupId);
+    void addSkill(Skill skill,Long studyGroupId);
 
     Set<Skill> getSkills(Long studyGroupId);
 }

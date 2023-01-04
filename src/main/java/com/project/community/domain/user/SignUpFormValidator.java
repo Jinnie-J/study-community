@@ -1,6 +1,6 @@
 package com.project.community.domain.user;
 
-import com.project.community.domain.user.dto.request.SignUpForm;
+import com.project.community.domain.user.dto.SignUpForm;
 import com.project.community.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

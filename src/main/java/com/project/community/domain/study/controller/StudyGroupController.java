@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.community.common.CurrentUser;
 import com.project.community.domain.location.entity.Location;
-import com.project.community.domain.location.repository.LocationRepository;
+import com.project.community.domain.location.service.LocationService;
 import com.project.community.domain.skill.entity.Skill;
-import com.project.community.domain.skill.repository.SkillRepository;
+import com.project.community.domain.skill.service.SkillService;
 import com.project.community.domain.study.dto.request.StudyGroupRequest;
 import com.project.community.domain.study.dto.response.StudyGroupResponse;
 import com.project.community.domain.study.service.StudyGroupService;
@@ -14,6 +14,7 @@ import com.project.community.domain.user.entity.User;
 import com.project.community.domain.user.entity.UserGroup;
 import com.project.community.domain.user.repository.UserGroupRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,12 +28,13 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class StudyGroupController {
 
     private final StudyGroupService studyGroupService;
     private final UserGroupRepository userGroupRepository;
-    private final SkillRepository skillRepository;
-    private final LocationRepository locationRepository;
+    private final SkillService skillService;
+    private final LocationService locationService;
     private final ObjectMapper objectMapper;
 
     //스터디 그룹 작성 화면 조회
@@ -42,11 +44,11 @@ public class StudyGroupController {
         model.addAttribute(new StudyGroupRequest());
 
         //기술 리스트
-        List<String> allSkills = skillRepository.findAll().stream().map(Skill::getTitle).collect(Collectors.toList());
+        List<String> allSkills = skillService.getAllSkills();
         model.addAttribute("skillList", objectMapper.writeValueAsString(allSkills));
 
         //지역 리스트
-        List<Location> allLocations = locationRepository.findAll();
+        List<Location> allLocations = locationService.findAll();
         model.addAttribute("locationList", allLocations);
 
         return "study/study-group-form";
@@ -106,10 +108,10 @@ public class StudyGroupController {
         Set<Skill> skills = studyGroupService.getSkills(studyGroupId);
         model.addAttribute("skills", skills.stream().map(Skill::getTitle).collect(Collectors.toList()));
 
-        List<String> allSkills = skillRepository.findAll().stream().map(Skill::getTitle).collect(Collectors.toList());
+        List<String> allSkills = skillService.getAllSkills();
         model.addAttribute("skillList", objectMapper.writeValueAsString(allSkills));
 
-        List<Location> allLocations = locationRepository.findAll();
+        List<Location> allLocations = locationService.findAll();
         model.addAttribute("locationList", allLocations);
         return "study/study-group-modify-form";
     }

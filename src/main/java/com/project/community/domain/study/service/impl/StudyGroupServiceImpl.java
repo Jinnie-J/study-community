@@ -12,6 +12,7 @@ import com.project.community.domain.user.entity.User;
 import com.project.community.domain.user.entity.UserGroup;
 import com.project.community.domain.user.repository.UserGroupRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class StudyGroupServiceImpl implements StudyGroupService {
 
     private final StudyGroupRepository studyGroupRepository;
@@ -87,7 +89,7 @@ public class StudyGroupServiceImpl implements StudyGroupService {
 
         studyGroup.update(studyGroupRequest.getTitle(), studyGroupRequest.getContent(), studyGroupRequest.getStudyType(),
                 studyGroupRequest.getNumberOfMembers(),studyGroupRequest.getLocation(), studyGroupRequest.getDuration(), studyGroupRequest.getStudyStartDate(),
-                studyGroupRequest.getMeetingType(), studyGroup.getContactType());
+                studyGroupRequest.getMeetingType(), studyGroupRequest.getContactType());
     }
 
     @Override
@@ -119,12 +121,12 @@ public class StudyGroupServiceImpl implements StudyGroupService {
                     .build()));
             skills.add(skill);
             studyGroupRequest.setSkills(skills);
-            addSkill(studyGroupRequest, skill, studyGroupId);
+            addSkill(skill, studyGroupId);
         }
     }
 
     @Override
-    public void addSkill(StudyGroupRequest studyGroupRequest, Skill skill, Long studyGroupId) {
+    public void addSkill(Skill skill, Long studyGroupId) {
         Optional<StudyGroup> studyGroupById = studyGroupRepository.findById(studyGroupId);
         studyGroupById.ifPresent(a -> a.getSkills().add(skill));
     }
