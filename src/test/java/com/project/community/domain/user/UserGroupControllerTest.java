@@ -4,7 +4,7 @@ import com.project.community.domain.enrollment.repository.EnrollmentRepository;
 import com.project.community.domain.study.dto.request.StudyGroupRequest;
 import com.project.community.domain.study.dto.response.StudyGroupResponse;
 import com.project.community.domain.study.service.StudyGroupService;
-import com.project.community.domain.user.dto.request.SignUpForm;
+import com.project.community.domain.user.dto.SignUpForm;
 import com.project.community.domain.user.entity.User;
 import com.project.community.domain.user.entity.UserGroup;
 import com.project.community.domain.user.repository.UserGroupRepository;
@@ -13,6 +13,7 @@ import com.project.community.domain.user.service.UserGroupService;
 import com.project.community.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -121,7 +122,7 @@ public class UserGroupControllerTest {
         //거절 시, 해당 그룹에 신청 다시 못하게 할 것 인지 확인
     }
 
-    private StudyGroupResponse createStudyGroup(String title, String content, User user){
+    private StudyGroupResponse createStudyGroup(String title, String content, User user) throws ParseException, CloneNotSupportedException {
         StudyGroupRequest studyGroup= StudyGroupRequest.builder()
                 .title(title)
                 .content(content)

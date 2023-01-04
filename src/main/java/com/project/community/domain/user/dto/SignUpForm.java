@@ -1,11 +1,14 @@
-package com.project.community.domain.user.dto.request;
+package com.project.community.domain.user.dto;
 
+import com.project.community.domain.location.entity.Location;
+import com.project.community.domain.skill.entity.Skill;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.util.Set;
 
 @Data
 public class SignUpForm {
@@ -22,4 +25,8 @@ public class SignUpForm {
     @NotBlank
     @Length(min = 8, max = 50)
     private String password;
+
+    private Location location;
+
+    private Set<Skill> skills;
 }

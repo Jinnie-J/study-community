@@ -34,4 +34,8 @@ public class LocationService {
             locationRepository.saveAll(zoneList);
         }
     }
+
+    public List<Location> findAll() {
+        return locationRepository.findAll();
+    }
 }
