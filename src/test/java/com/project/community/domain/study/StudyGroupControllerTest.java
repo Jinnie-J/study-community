@@ -3,7 +3,7 @@ package com.project.community.domain.study;
 import com.project.community.domain.study.entity.StudyGroup;
 import com.project.community.domain.study.repository.StudyGroupRepository;
 import com.project.community.domain.study.service.StudyGroupService;
-import com.project.community.domain.user.dto.request.SignUpForm;
+import com.project.community.domain.user.dto.SignUpForm;
 import com.project.community.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

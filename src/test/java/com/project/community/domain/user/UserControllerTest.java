@@ -1,6 +1,6 @@
 package com.project.community.domain.user;
 
-import com.project.community.domain.user.dto.request.SignUpForm;
+import com.project.community.domain.user.dto.SignUpForm;
 import com.project.community.domain.user.repository.UserRepository;
 import com.project.community.domain.user.service.UserService;
 import org.junit.jupiter.api.AfterEach;
