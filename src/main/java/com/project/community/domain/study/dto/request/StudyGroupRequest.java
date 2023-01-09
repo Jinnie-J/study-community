@@ -32,6 +32,8 @@ public class StudyGroupRequest implements Cloneable{
 
     private String numberOfMembers;
 
+    private Long remainingSeats;
+
     private Location location;
 
     private String duration;
@@ -60,6 +62,7 @@ public class StudyGroupRequest implements Cloneable{
                 .createDate(studyGroupRequest.getCreateDate())
                 .studyType(studyGroupRequest.getStudyType())
                 .numberOfMembers(studyGroupRequest.getNumberOfMembers())
+                .remainingSeats(studyGroupRequest.getRemainingSeats())
                 .location(studyGroupRequest.getLocation())
                 .duration(studyGroupRequest.getDuration())
                 .meetingType(studyGroupRequest.getMeetingType())

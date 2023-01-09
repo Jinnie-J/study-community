@@ -34,6 +34,8 @@ public class StudyGroupResponse {
 
     private String numberOfMembers;
 
+    private Long remainingSeats;
+
     private Location location;
 
     private String duration;
@@ -66,6 +68,7 @@ public class StudyGroupResponse {
                 .meetingType(studyGroup.getMeetingType())
                 .contactType(studyGroup.getContactType())
                 .skills(studyGroup.getSkills())
+                .remainingSeats(studyGroup.getRemainingSeats())
                 .studyStartDate(studyGroup.getStudyStartDate())
                 .closed(studyGroup.isClosed())
                 .build();

@@ -35,6 +35,8 @@ public class StudyGroup {
 
     private String numberOfMembers;  //모집 인원
 
+    private Long remainingSeats; //남은 자리
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
     private Location location; //지역
@@ -66,6 +68,12 @@ public class StudyGroup {
     public void close(){
         this.closed = true;
     }
+    public void addMember(){
+        this.remainingSeats -= 1;
+    }
+    public void removeMember(){
+        this.remainingSeats += 1;
+    }
 
     public void update(String title, String content, StudyType studyType, String numberOfMembers,
                        Location location, String duration, LocalDateTime studyStartDate, MeetingType meetingType, ContactType contactType){
@@ -80,7 +88,7 @@ public class StudyGroup {
         this.contactType = contactType;
     }
     @Builder
-    public StudyGroup(Long id, String title, String createdBy, String content, StudyType studyType, String numberOfMembers, Location location, ContactType contactType,
+    public StudyGroup(Long id, String title, String createdBy, String content, StudyType studyType, String numberOfMembers,Long remainingSeats ,Location location, ContactType contactType,
                       String duration, MeetingType meetingType, Set skills, LocalDateTime studyStartDate, LocalDateTime createDate, LocalDateTime updateDate, Boolean closed){
         this.id = id;
         this.title = title;
@@ -88,6 +96,7 @@ public class StudyGroup {
         this.createdBy = createdBy;
         this.studyType = studyType;
         this.numberOfMembers = numberOfMembers;
+        this.remainingSeats = remainingSeats;
         this.location = location;
         this.duration = duration;
         this.meetingType = meetingType;
