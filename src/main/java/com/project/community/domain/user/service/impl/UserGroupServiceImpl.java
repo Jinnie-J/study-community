@@ -2,6 +2,8 @@ package com.project.community.domain.user.service.impl;
 
 import com.project.community.domain.enrollment.entity.Enrollment;
 import com.project.community.domain.enrollment.repository.EnrollmentRepository;
+import com.project.community.domain.study.entity.StudyGroup;
+import com.project.community.domain.user.dto.UserAccount;
 import com.project.community.domain.user.entity.User;
 import com.project.community.domain.user.entity.UserGroup;
 import com.project.community.domain.user.service.UserGroupService;
@@ -43,12 +45,17 @@ public class UserGroupServiceImpl implements UserGroupService {
     }
 
     @Override
-    public void acceptEnrollment(UserGroup userGroup, Enrollment enrollment) {
+    public void acceptEnrollment(StudyGroup studyGroup, UserGroup userGroup, Enrollment enrollment) {
         userGroup.accept(enrollment);
+        studyGroup.addMember();
     }
 
     @Override
-    public void rejectEnrollment(UserGroup userGroup, Enrollment enrollment) {
+    public void rejectEnrollment(StudyGroup studyGroup, UserGroup userGroup, Enrollment enrollment) {
         userGroup.reject(enrollment);
+        UserAccount userAccount = new UserAccount(enrollment.getUser());
+        if(userGroup.isAccepted(userAccount)) {
+            studyGroup.removeMember();
+        }
     }
 }

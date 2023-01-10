@@ -9,6 +9,8 @@ import com.project.community.domain.skill.entity.Skill;
 import com.project.community.domain.skill.service.SkillService;
 import com.project.community.domain.study.dto.request.StudyGroupRequest;
 import com.project.community.domain.study.dto.response.StudyGroupResponse;
+import com.project.community.domain.study.entity.StudyGroup;
+import com.project.community.domain.study.repository.StudyGroupRepository;
 import com.project.community.domain.study.service.StudyGroupService;
 import com.project.community.domain.user.entity.User;
 import com.project.community.domain.user.entity.UserGroup;
@@ -16,6 +18,10 @@ import com.project.community.domain.user.repository.UserGroupRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.parser.ParseException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -32,6 +38,7 @@ import java.util.stream.Collectors;
 public class StudyGroupController {
 
     private final StudyGroupService studyGroupService;
+    private final StudyGroupRepository studyGroupRepository;
     private final UserGroupRepository userGroupRepository;
     private final SkillService skillService;
     private final LocationService locationService;
@@ -137,6 +144,16 @@ public class StudyGroupController {
         attributes.addFlashAttribute("message", "스터디를 마감했습니다");
 
         return "redirect:/study-group/{studyGroupId}";
+    }
+
+    @GetMapping("/search/study")
+    public String searchStudy(String keyword, Model model,
+                              @PageableDefault(size = 9, sort="createDate", direction = Sort.Direction.DESC) Pageable pageable){
+        Page<StudyGroup> studyGroupPage = studyGroupRepository.findByKeyword(keyword, pageable);
+        model.addAttribute("studyGroupPage", studyGroupPage);
+        model.addAttribute("keyword",keyword);
+        model.addAttribute("sortProperty", pageable.getSort().toString().contains("createDate") ? "createDate" : "remainingSeats");
+        return "search";
     }
 
 }

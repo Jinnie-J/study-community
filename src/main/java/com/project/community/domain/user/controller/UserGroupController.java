@@ -2,6 +2,7 @@ package com.project.community.domain.user.controller;
 
 import com.project.community.common.CurrentUser;
 import com.project.community.domain.enrollment.entity.Enrollment;
+import com.project.community.domain.study.entity.StudyGroup;
 import com.project.community.domain.user.entity.User;
 import com.project.community.domain.user.entity.UserGroup;
 import com.project.community.domain.user.repository.UserGroupRepository;
@@ -38,17 +39,19 @@ public class UserGroupController {
 
     //참가 신청 수락
     @GetMapping("/study-group/{studyGroupId}/user-group/{userGroupId}/enrollments/{enrollmentId}/accept")
-    public String acceptEnrollment(@PathVariable("userGroupId") UserGroup userGroup,
+    public String acceptEnrollment(@PathVariable("studyGroupId") StudyGroup studyGroup,
+                                   @PathVariable("userGroupId") UserGroup userGroup,
                                    @PathVariable("enrollmentId") Enrollment enrollment){
-        userGroupService.acceptEnrollment(userGroup,enrollment);
+        userGroupService.acceptEnrollment(studyGroup, userGroup,enrollment);
         return "redirect:/study-group/{studyGroupId}/people";
     }
 
     //참가 신청 거절
     @GetMapping("/study-group/{studyGroupId}/user-group/{userGroupId}/enrollments/{enrollmentId}/reject")
-    public String rejectEnrollment(@PathVariable("userGroupId") UserGroup userGroup,
+    public String rejectEnrollment(@PathVariable("studyGroupId") StudyGroup studyGroup,
+                                   @PathVariable("userGroupId") UserGroup userGroup,
                                    @PathVariable("enrollmentId") Enrollment enrollment){
-        userGroupService.rejectEnrollment(userGroup,enrollment);
+        userGroupService.rejectEnrollment(studyGroup, userGroup,enrollment);
         return "redirect:/study-group/{studyGroupId}/people";
     }
 }

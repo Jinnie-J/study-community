@@ -43,6 +43,8 @@ public class StudyGroupServiceImpl implements StudyGroupService {
         studyGroupRequest.setSkills(skills);
 
         studyGroupRequest.setCreatedBy(user.getNickname());
+        //TODO : numberOfMembers도 반환타입 long으로 바꾸기
+        studyGroupRequest.setRemainingSeats((long) Integer.parseInt(studyGroupRequest.getNumberOfMembers()));
         studyGroupRequest.setCreateDate(LocalDateTime.now());
         StudyGroup studyGroup = StudyGroupRequest.toEntity(studyGroupRequest);
         StudyGroup newStudyGroup = studyGroupRepository.save(studyGroup);
