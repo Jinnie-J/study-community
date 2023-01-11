@@ -1,5 +1,6 @@
 package com.project.community.domain.study.entity;
 
+import com.project.community.domain.comment.entity.Comment;
 import com.project.community.domain.location.entity.Location;
 import com.project.community.domain.skill.entity.Skill;
 import com.project.community.domain.study.enums.ContactType;
@@ -64,6 +65,10 @@ public class StudyGroup {
 
     @OneToMany(mappedBy = "studyGroup", cascade = CascadeType.ALL)
     private List<UserGroup> userGroups = new ArrayList();
+
+    @OneToMany(mappedBy = "studyGroup" , cascade = CascadeType.REMOVE)
+    @OrderBy("id asc")
+    private List<Comment> comments = new ArrayList<>();
 
     public void close(){
         this.closed = true;
