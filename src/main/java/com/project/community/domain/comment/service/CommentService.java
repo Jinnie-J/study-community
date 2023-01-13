@@ -4,5 +4,9 @@ import com.project.community.domain.comment.dto.CommentRequest;
 import com.project.community.domain.user.entity.User;
 
 public interface CommentService {
-    void createComment(User user, Long studyGroupId, CommentRequest commentRequest);
+    Long createComment(User user, Long studyGroupId, CommentRequest commentRequest);
+
+    void update(Long commentId, CommentRequest commentRequest);
+
+    void delete(Long commentId);
 }

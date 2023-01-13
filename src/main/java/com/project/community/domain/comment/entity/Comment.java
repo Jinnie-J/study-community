@@ -6,7 +6,6 @@ import com.project.community.domain.user.entity.User;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter @EqualsAndHashCode(of ="id")
@@ -22,9 +21,9 @@ public class Comment {
 
     private String comment;
 
-    private LocalDateTime createdDate;
+    private String createdDate;
 
-    private LocalDateTime modifiedDate;
+    private String modifiedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "study_group_id")
@@ -33,4 +32,8 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
+
+    public void update(String comment){
+        this.comment = comment;
+    }
 }
