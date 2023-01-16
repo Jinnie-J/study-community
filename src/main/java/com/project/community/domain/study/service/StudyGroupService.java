@@ -35,4 +35,8 @@ public interface StudyGroupService {
     List<StudyGroupResponse> closedStudy(User user);
 
     List<StudyGroupResponse> enrolledStudy(User user);
+
+    List<StudyGroupResponse> getOpenStudyGroup();
+
+    List<StudyGroupResponse> getClosedStudyGroup();
 }

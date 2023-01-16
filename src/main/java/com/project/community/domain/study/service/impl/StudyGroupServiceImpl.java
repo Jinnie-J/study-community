@@ -194,4 +194,22 @@ public class StudyGroupServiceImpl implements StudyGroupService {
                 .collect(Collectors.toList());
 
     }
+
+    @Override
+    public List<StudyGroupResponse> getOpenStudyGroup() {
+        return studyGroupRepository.findAll()
+                .stream()
+                .filter(studyGroup -> !studyGroup.isClosed())
+                .map(StudyGroupResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StudyGroupResponse> getClosedStudyGroup() {
+        return studyGroupRepository.findAll()
+                .stream()
+                .filter(studyGroup -> studyGroup.isClosed())
+                .map(StudyGroupResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
 }

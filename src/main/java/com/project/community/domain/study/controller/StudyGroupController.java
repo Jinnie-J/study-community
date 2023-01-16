@@ -79,12 +79,14 @@ public class StudyGroupController {
     //스터디 그룹 전체 조회
     @GetMapping("/study-group")
     public String getAllStudyGroup(Model model){
-        List<StudyGroupResponse> studyGroupList = studyGroupService.getAllStudyGroup();
-        model.addAttribute("studyGroupList", studyGroupList);
+        //모집 중인 모임 리스트
+        List<StudyGroupResponse> openStudyGroupList = studyGroupService.getOpenStudyGroup();
+        model.addAttribute("openStudyGroupList", openStudyGroupList);
 
-        //지역 리스트
-        List<Location> allLocations = locationService.findAll();
-        model.addAttribute("locationList", allLocations);
+        //마감한 모임 리스트
+        List<StudyGroupResponse> closedStudyList = studyGroupService.getClosedStudyGroup();
+        model.addAttribute("closedStudyList", closedStudyList);
+
 
         return "study/study-group";
     }
