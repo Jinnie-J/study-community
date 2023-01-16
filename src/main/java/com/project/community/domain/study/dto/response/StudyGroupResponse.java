@@ -1,5 +1,6 @@
 package com.project.community.domain.study.dto.response;
 
+import com.project.community.domain.comment.dto.CommentResponse;
 import com.project.community.domain.location.entity.Location;
 import com.project.community.domain.skill.entity.Skill;
 import com.project.community.domain.study.entity.StudyGroup;
@@ -13,7 +14,9 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -54,6 +57,8 @@ public class StudyGroupResponse {
 
     private Boolean closed;
 
+    private List<CommentResponse> comments;
+
     public static StudyGroupResponse fromEntity(StudyGroup studyGroup){
         return StudyGroupResponse.builder()
                 .studyGroupId(studyGroup.getId())
@@ -71,6 +76,7 @@ public class StudyGroupResponse {
                 .remainingSeats(studyGroup.getRemainingSeats())
                 .studyStartDate(studyGroup.getStudyStartDate())
                 .closed(studyGroup.isClosed())
+                .comments(studyGroup.getComments().stream().map(CommentResponse::new).collect(Collectors.toList()))
                 .build();
     }
 }

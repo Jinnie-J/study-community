@@ -3,6 +3,8 @@ package com.project.community.domain.study.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.community.common.CurrentUser;
+import com.project.community.domain.comment.dto.CommentRequest;
+import com.project.community.domain.comment.dto.CommentResponse;
 import com.project.community.domain.location.entity.Location;
 import com.project.community.domain.location.service.LocationService;
 import com.project.community.domain.skill.entity.Skill;
@@ -79,6 +81,11 @@ public class StudyGroupController {
     public String getAllStudyGroup(Model model){
         List<StudyGroupResponse> studyGroupList = studyGroupService.getAllStudyGroup();
         model.addAttribute("studyGroupList", studyGroupList);
+
+        //지역 리스트
+        List<Location> allLocations = locationService.findAll();
+        model.addAttribute("locationList", allLocations);
+
         return "study/study-group";
     }
 
@@ -89,6 +96,11 @@ public class StudyGroupController {
         UserGroup userGroup = userGroupRepository.findByStudyGroupId(studyGroupId);
         model.addAttribute("studyGroup", studyGroup);
         model.addAttribute("userGroup", userGroup);
+
+        //댓글
+        List<CommentResponse> comments = studyGroup.getComments();
+        model.addAttribute("comments", comments);
+        model.addAttribute(new CommentRequest());
 
         return "study/study-group-detail";
     }
