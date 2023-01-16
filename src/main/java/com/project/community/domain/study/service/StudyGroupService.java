@@ -27,4 +27,12 @@ public interface StudyGroupService {
     void addSkill(Skill skill,Long studyGroupId);
 
     Set<Skill> getSkills(Long studyGroupId);
+
+    List<StudyGroupResponse> studyCreatedByMe(String nickname);
+
+    List<StudyGroupResponse> joinedStudy(User user);
+
+    List<StudyGroupResponse> closedStudy(User user);
+
+    List<StudyGroupResponse> enrolledStudy(User user);
 }

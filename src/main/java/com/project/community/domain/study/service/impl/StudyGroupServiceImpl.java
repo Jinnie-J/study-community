@@ -1,5 +1,7 @@
 package com.project.community.domain.study.service.impl;
 
+import com.project.community.domain.enrollment.entity.Enrollment;
+import com.project.community.domain.enrollment.repository.EnrollmentRepository;
 import com.project.community.domain.skill.entity.Skill;
 import com.project.community.domain.skill.repository.SkillRepository;
 import com.project.community.domain.study.dto.request.StudyGroupRequest;
@@ -33,6 +35,7 @@ public class StudyGroupServiceImpl implements StudyGroupService {
     private final StudyGroupRepository studyGroupRepository;
     private final UserGroupRepository userGroupRepository;
     private final SkillRepository skillRepository;
+    private final EnrollmentRepository enrollmentRepository;
 
     @Override
     public StudyGroupResponse createStudyGroup(User user, StudyGroupRequest studyGroupRequest) throws ParseException, CloneNotSupportedException {
@@ -137,5 +140,58 @@ public class StudyGroupServiceImpl implements StudyGroupService {
     public Set<Skill> getSkills(Long studyGroupId) {
         Optional<StudyGroup> studyGroupById = studyGroupRepository.findById(studyGroupId);
         return studyGroupById.orElseThrow().getSkills();
+    }
+
+    @Override
+    public List<StudyGroupResponse> studyCreatedByMe(String nickname) {
+        return studyGroupRepository.findByCreatedBy(nickname)
+                .stream()
+                .map(StudyGroupResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StudyGroupResponse> joinedStudy(User user) {
+        List<UserGroup> userGroupList = userGroupRepository.findByUserId(user.getId());
+        List<StudyGroup> studyGroupList = new ArrayList<>();
+        for(UserGroup userGroup : userGroupList){
+            StudyGroup studyGroup = userGroup.getStudyGroup();
+            if(!studyGroup.isClosed()) {
+                studyGroupList.add(userGroup.getStudyGroup());
+            }
+        }
+        return studyGroupList.stream()
+                .map(StudyGroupResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StudyGroupResponse> closedStudy(User user) {
+        List<UserGroup> userGroupList = userGroupRepository.findByUserId(user.getId());
+        List<StudyGroup> studyGroupList = new ArrayList<>();
+        for(UserGroup userGroup : userGroupList){
+            StudyGroup studyGroup = userGroup.getStudyGroup();
+            if(studyGroup.isClosed()) {
+                studyGroupList.add(userGroup.getStudyGroup());
+            }
+        }
+        return studyGroupList.stream()
+                .map(StudyGroupResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StudyGroupResponse> enrolledStudy(User user) {
+        List<Enrollment> enrollmentList = enrollmentRepository.findByUser(user);
+        List<StudyGroup> studyGroupList = new ArrayList<>();
+        for(Enrollment enrollment : enrollmentList){
+            if(!enrollment.isAccepted()){
+                studyGroupList.add(enrollment.getUserGroup().getStudyGroup());
+            }
+        }
+        return studyGroupList.stream()
+                .map(StudyGroupResponse::fromEntity)
+                .collect(Collectors.toList());
+
     }
 }

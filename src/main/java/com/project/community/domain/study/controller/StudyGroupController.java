@@ -91,7 +91,7 @@ public class StudyGroupController {
 
     //스터디 그룹 상세 조회
     @GetMapping("/study-group/{studyGroupId}")
-    public String getStudyGroup(Model model, @PathVariable("studyGroupId") Long studyGroupId){
+    public String getStudyGroup(Model model, @PathVariable("studyGroupId") Long studyGroupId, @CurrentUser User user){
         StudyGroupResponse studyGroup = studyGroupService.getStudyGroup(studyGroupId);
         UserGroup userGroup = userGroupRepository.findByStudyGroupId(studyGroupId);
         model.addAttribute("studyGroup", studyGroup);
@@ -100,6 +100,7 @@ public class StudyGroupController {
         //댓글
         List<CommentResponse> comments = studyGroup.getComments();
         model.addAttribute("comments", comments);
+        model.addAttribute("user", user);
         model.addAttribute(new CommentRequest());
 
         return "study/study-group-detail";
