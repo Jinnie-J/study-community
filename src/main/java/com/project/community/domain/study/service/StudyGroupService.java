@@ -39,4 +39,6 @@ public interface StudyGroupService {
     List<StudyGroupResponse> getOpenStudyGroup();
 
     List<StudyGroupResponse> getClosedStudyGroup();
+
+    int updateView(Long id);
 }

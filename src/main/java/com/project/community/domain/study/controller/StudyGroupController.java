@@ -99,6 +99,9 @@ public class StudyGroupController {
         model.addAttribute("studyGroup", studyGroup);
         model.addAttribute("userGroup", userGroup);
 
+        // 조회수 증가
+        studyGroupService.updateView(studyGroupId);
+
         //댓글
         List<CommentResponse> comments = studyGroup.getComments();
         model.addAttribute("comments", comments);

@@ -212,4 +212,9 @@ public class StudyGroupServiceImpl implements StudyGroupService {
                 .map(StudyGroupResponse::fromEntity)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public int updateView(Long id) {
+        return studyGroupRepository.updateView(id);
+    }
 }
