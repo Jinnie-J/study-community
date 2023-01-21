@@ -36,9 +36,9 @@ public interface StudyGroupService {
 
     List<StudyGroupResponse> enrolledStudy(User user);
 
-    List<StudyGroupResponse> getOpenStudyGroup();
+    List<StudyGroupResponse> getOpenStudyGroup(String sortValue);
 
-    List<StudyGroupResponse> getClosedStudyGroup();
+    List<StudyGroupResponse> getClosedStudyGroup(String sortValue);
 
     int updateView(Long id);
 }

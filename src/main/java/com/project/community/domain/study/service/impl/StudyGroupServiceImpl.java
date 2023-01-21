@@ -19,6 +19,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -196,8 +197,8 @@ public class StudyGroupServiceImpl implements StudyGroupService {
     }
 
     @Override
-    public List<StudyGroupResponse> getOpenStudyGroup() {
-        return studyGroupRepository.findAll()
+    public List<StudyGroupResponse> getOpenStudyGroup(String sortValue) {
+        return studyGroupRepository.findAll(Sort.by(Sort.Direction.DESC, sortValue))
                 .stream()
                 .filter(studyGroup -> !studyGroup.isClosed())
                 .map(StudyGroupResponse::fromEntity)
@@ -205,8 +206,8 @@ public class StudyGroupServiceImpl implements StudyGroupService {
     }
 
     @Override
-    public List<StudyGroupResponse> getClosedStudyGroup() {
-        return studyGroupRepository.findAll()
+    public List<StudyGroupResponse> getClosedStudyGroup(String sortValue) {
+        return studyGroupRepository.findAll(Sort.by(Sort.Direction.DESC, sortValue))
                 .stream()
                 .filter(studyGroup -> studyGroup.isClosed())
                 .map(StudyGroupResponse::fromEntity)

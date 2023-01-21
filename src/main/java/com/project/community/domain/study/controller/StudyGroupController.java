@@ -77,14 +77,14 @@ public class StudyGroupController {
     }
 
     //스터디 그룹 전체 조회
-    @GetMapping("/study-group")
-    public String getAllStudyGroup(Model model){
+    @GetMapping(value={"/study-group/sort/{sortValue}", "/study-group"})
+    public String getAllStudyGroup(Model model, @PathVariable(required = false) String sortValue){
         //모집 중인 모임 리스트
-        List<StudyGroupResponse> openStudyGroupList = studyGroupService.getOpenStudyGroup();
+        List<StudyGroupResponse> openStudyGroupList = studyGroupService.getOpenStudyGroup(sortValue);
         model.addAttribute("openStudyGroupList", openStudyGroupList);
 
         //마감한 모임 리스트
-        List<StudyGroupResponse> closedStudyList = studyGroupService.getClosedStudyGroup();
+        List<StudyGroupResponse> closedStudyList = studyGroupService.getClosedStudyGroup(sortValue);
         model.addAttribute("closedStudyList", closedStudyList);
 
 
