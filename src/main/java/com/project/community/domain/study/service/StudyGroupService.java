@@ -1,8 +1,8 @@
 package com.project.community.domain.study.service;
 
 import com.project.community.domain.skill.entity.Skill;
-import com.project.community.domain.study.dto.request.StudyGroupRequest;
-import com.project.community.domain.study.dto.response.StudyGroupResponse;
+import com.project.community.domain.study.dto.StudyGroupRequest;
+import com.project.community.domain.study.dto.StudyGroupResponse;
 import com.project.community.domain.study.entity.StudyGroup;
 import com.project.community.domain.user.entity.User;
 import org.json.simple.parser.ParseException;

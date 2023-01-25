@@ -1,4 +1,4 @@
-package com.project.community.domain.study.dto.response;
+package com.project.community.domain.study.dto;
 
 import com.project.community.domain.comment.dto.CommentResponse;
 import com.project.community.domain.location.entity.Location;

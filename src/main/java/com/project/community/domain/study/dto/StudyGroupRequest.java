@@ -1,4 +1,4 @@
-package com.project.community.domain.study.dto.request;
+package com.project.community.domain.study.dto;
 
 import com.project.community.domain.location.entity.Location;
 import com.project.community.domain.study.entity.StudyGroup;

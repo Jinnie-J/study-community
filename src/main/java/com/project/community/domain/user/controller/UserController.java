@@ -7,7 +7,7 @@ import com.project.community.domain.location.entity.Location;
 import com.project.community.domain.location.service.LocationService;
 import com.project.community.domain.skill.entity.Skill;
 import com.project.community.domain.skill.service.SkillService;
-import com.project.community.domain.study.dto.response.StudyGroupResponse;
+import com.project.community.domain.study.dto.StudyGroupResponse;
 import com.project.community.domain.study.service.StudyGroupService;
 import com.project.community.domain.user.SignUpFormValidator;
 import com.project.community.domain.user.dto.Profile;
