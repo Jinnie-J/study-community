@@ -47,7 +47,6 @@ public class StudyGroupServiceImpl implements StudyGroupService {
         studyGroupRequest.setSkills(skills);
 
         studyGroupRequest.setCreatedBy(user.getNickname());
-        //TODO : numberOfMembers도 반환타입 long으로 바꾸기
         studyGroupRequest.setRemainingSeats((long) Integer.parseInt(studyGroupRequest.getNumberOfMembers()));
         studyGroupRequest.setCreateDate(LocalDateTime.now());
         StudyGroup studyGroup = StudyGroupRequest.toEntity(studyGroupRequest);
@@ -217,5 +216,12 @@ public class StudyGroupServiceImpl implements StudyGroupService {
     @Override
     public int updateView(Long id) {
         return studyGroupRepository.updateView(id);
+    }
+
+    @Override
+    public void deleteStudyGroup(User user, Long studyGroupId) {
+        StudyGroup studyGroup = validateDeleteStudyGroup(user, studyGroupId);
+        studyGroupRepository.delete(studyGroup);
+
     }
 }

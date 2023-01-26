@@ -73,7 +73,7 @@ public class StudyGroupController {
         }
 
         studyGroupService.createStudyGroup(user, studyGroupRequest);
-        return "redirect:/study-group";
+        return "redirect:/study-group/sort/id";
     }
 
     //스터디 그룹 전체 조회
@@ -164,6 +164,7 @@ public class StudyGroupController {
         return "redirect:/study-group/{studyGroupId}";
     }
 
+    //스터디 그룹 검색
     @GetMapping("/search/study")
     public String searchStudy(String keyword, Model model,
                               @PageableDefault(size = 9, sort="createDate", direction = Sort.Direction.DESC) Pageable pageable){
@@ -174,4 +175,12 @@ public class StudyGroupController {
         return "search";
     }
 
+    //스터디 그룹 삭제
+    @GetMapping("/study-group/delete/{studyGroupId}")
+    public String deleteStudyGroup(@CurrentUser User user, @PathVariable("studyGroupId") Long studyGroupId, RedirectAttributes attributes){
+        studyGroupService.deleteStudyGroup(user, studyGroupId);
+        attributes.addFlashAttribute("message", "스터디를 삭제했습니다");
+
+        return "redirect:/study-group/sort/id";
+    }
 }

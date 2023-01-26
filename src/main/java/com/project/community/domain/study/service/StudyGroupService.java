@@ -41,4 +41,6 @@ public interface StudyGroupService {
     List<StudyGroupResponse> getClosedStudyGroup(String sortValue);
 
     int updateView(Long id);
+
+    void deleteStudyGroup(User user, Long studyGroupId);
 }
