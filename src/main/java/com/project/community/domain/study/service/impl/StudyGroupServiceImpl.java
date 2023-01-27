@@ -7,6 +7,7 @@ import com.project.community.domain.skill.repository.SkillRepository;
 import com.project.community.domain.study.dto.StudyGroupRequest;
 import com.project.community.domain.study.dto.StudyGroupResponse;
 import com.project.community.domain.study.entity.StudyGroup;
+import com.project.community.domain.study.event.StudyCreatedEvent;
 import com.project.community.domain.study.repository.StudyGroupRepository;
 import com.project.community.domain.study.service.StudyGroupService;
 import com.project.community.domain.user.enums.UserType;
@@ -19,6 +20,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +39,7 @@ public class StudyGroupServiceImpl implements StudyGroupService {
     private final UserGroupRepository userGroupRepository;
     private final SkillRepository skillRepository;
     private final EnrollmentRepository enrollmentRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public StudyGroupResponse createStudyGroup(User user, StudyGroupRequest studyGroupRequest) throws ParseException, CloneNotSupportedException {
@@ -61,6 +64,8 @@ public class StudyGroupServiceImpl implements StudyGroupService {
                 .build();
 
         userGroupRepository.save(userGroup);
+
+        eventPublisher.publishEvent(new StudyCreatedEvent(newStudyGroup));
 
         return StudyGroupResponse.fromEntity(newStudyGroup);
     }
