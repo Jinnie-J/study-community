@@ -35,11 +35,12 @@ public class StudyEventListener {
     }
 
     private void saveStudyCreatedNotification(StudyGroup studyGroup, User user) {
+        String message = studyGroup.getLocation() +"지역에" + studyGroup.getSkills() +"의 기술을 사용하는 모임이 등록되었습니다.";
         Notification notification = new Notification();
         notification.setTitle(studyGroup.getTitle());
         notification.setChecked(false);
-        notification.setCreatedLocalDateTime(LocalDateTime.now());
-        notification.setMessage("알림 메시지");
+        notification.setCreatedDateTime(LocalDateTime.now());
+        notification.setMessage(message);
         notification.setUser(user);
         notification.setNotificationType(NotificationType.CREATED);
         notificationRepository.save(notification);
