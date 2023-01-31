@@ -8,6 +8,7 @@ import com.project.community.domain.study.dto.StudyGroupRequest;
 import com.project.community.domain.study.dto.StudyGroupResponse;
 import com.project.community.domain.study.entity.StudyGroup;
 import com.project.community.domain.study.event.StudyCreatedEvent;
+import com.project.community.domain.study.event.StudyUpdateEvent;
 import com.project.community.domain.study.repository.StudyGroupRepository;
 import com.project.community.domain.study.service.StudyGroupService;
 import com.project.community.domain.user.enums.UserType;
@@ -100,12 +101,15 @@ public class StudyGroupServiceImpl implements StudyGroupService {
         studyGroup.update(studyGroupRequest.getTitle(), studyGroupRequest.getContent(), studyGroupRequest.getStudyType(),
                 studyGroupRequest.getNumberOfMembers(),studyGroupRequest.getLocation(), studyGroupRequest.getDuration(), studyGroupRequest.getStudyStartDate(),
                 studyGroupRequest.getMeetingType(), studyGroupRequest.getContactType());
+
+        eventPublisher.publishEvent(new StudyUpdateEvent(studyGroup, "스터디정보를 수정하였습니다."));
     }
 
     @Override
     public void closeStudyGroup(User user, Long studyGroupId) {
         StudyGroup studyGroup = validateDeleteStudyGroup(user, studyGroupId);
         studyGroup.close();
+        eventPublisher.publishEvent(new StudyUpdateEvent(studyGroup, "스터디를 마감하였습니다."));
     }
 
     //삭제 - 리더 권한 체크하기
