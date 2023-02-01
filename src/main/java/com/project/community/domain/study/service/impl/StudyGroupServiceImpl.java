@@ -232,5 +232,6 @@ public class StudyGroupServiceImpl implements StudyGroupService {
         StudyGroup studyGroup = validateDeleteStudyGroup(user, studyGroupId);
         studyGroupRepository.delete(studyGroup);
 
+        eventPublisher.publishEvent(new StudyUpdateEvent(studyGroup, "스터디를 삭제하였습니다."));
     }
 }
