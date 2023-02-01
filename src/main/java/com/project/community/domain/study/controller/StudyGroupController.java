@@ -9,8 +9,8 @@ import com.project.community.domain.location.entity.Location;
 import com.project.community.domain.location.service.LocationService;
 import com.project.community.domain.skill.entity.Skill;
 import com.project.community.domain.skill.service.SkillService;
-import com.project.community.domain.study.dto.request.StudyGroupRequest;
-import com.project.community.domain.study.dto.response.StudyGroupResponse;
+import com.project.community.domain.study.dto.StudyGroupRequest;
+import com.project.community.domain.study.dto.StudyGroupResponse;
 import com.project.community.domain.study.entity.StudyGroup;
 import com.project.community.domain.study.repository.StudyGroupRepository;
 import com.project.community.domain.study.service.StudyGroupService;
@@ -73,33 +73,39 @@ public class StudyGroupController {
         }
 
         studyGroupService.createStudyGroup(user, studyGroupRequest);
-        return "redirect:/study-group";
+        return "redirect:/study-group/sort/id";
     }
 
     //스터디 그룹 전체 조회
-    @GetMapping("/study-group")
-    public String getAllStudyGroup(Model model){
-        List<StudyGroupResponse> studyGroupList = studyGroupService.getAllStudyGroup();
-        model.addAttribute("studyGroupList", studyGroupList);
+    @GetMapping(value={"/study-group/sort/{sortValue}", "/study-group"})
+    public String getAllStudyGroup(Model model, @PathVariable(required = false) String sortValue){
+        //모집 중인 모임 리스트
+        List<StudyGroupResponse> openStudyGroupList = studyGroupService.getOpenStudyGroup(sortValue);
+        model.addAttribute("openStudyGroupList", openStudyGroupList);
 
-        //지역 리스트
-        List<Location> allLocations = locationService.findAll();
-        model.addAttribute("locationList", allLocations);
+        //마감한 모임 리스트
+        List<StudyGroupResponse> closedStudyList = studyGroupService.getClosedStudyGroup(sortValue);
+        model.addAttribute("closedStudyList", closedStudyList);
+
 
         return "study/study-group";
     }
 
     //스터디 그룹 상세 조회
     @GetMapping("/study-group/{studyGroupId}")
-    public String getStudyGroup(Model model, @PathVariable("studyGroupId") Long studyGroupId){
+    public String getStudyGroup(Model model, @PathVariable("studyGroupId") Long studyGroupId, @CurrentUser User user){
         StudyGroupResponse studyGroup = studyGroupService.getStudyGroup(studyGroupId);
         UserGroup userGroup = userGroupRepository.findByStudyGroupId(studyGroupId);
         model.addAttribute("studyGroup", studyGroup);
         model.addAttribute("userGroup", userGroup);
 
+        // 조회수 증가
+        studyGroupService.updateView(studyGroupId);
+
         //댓글
         List<CommentResponse> comments = studyGroup.getComments();
         model.addAttribute("comments", comments);
+        model.addAttribute("user", user);
         model.addAttribute(new CommentRequest());
 
         return "study/study-group-detail";
@@ -158,6 +164,7 @@ public class StudyGroupController {
         return "redirect:/study-group/{studyGroupId}";
     }
 
+    //스터디 그룹 검색
     @GetMapping("/search/study")
     public String searchStudy(String keyword, Model model,
                               @PageableDefault(size = 9, sort="createDate", direction = Sort.Direction.DESC) Pageable pageable){
@@ -168,4 +175,12 @@ public class StudyGroupController {
         return "search";
     }
 
+    //스터디 그룹 삭제
+    @GetMapping("/study-group/delete/{studyGroupId}")
+    public String deleteStudyGroup(@CurrentUser User user, @PathVariable("studyGroupId") Long studyGroupId, RedirectAttributes attributes){
+        studyGroupService.deleteStudyGroup(user, studyGroupId);
+        attributes.addFlashAttribute("message", "스터디를 삭제했습니다");
+
+        return "redirect:/study-group/sort/id";
+    }
 }

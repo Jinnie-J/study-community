@@ -1,8 +1,8 @@
 package com.project.community.domain.study.service;
 
 import com.project.community.domain.skill.entity.Skill;
-import com.project.community.domain.study.dto.request.StudyGroupRequest;
-import com.project.community.domain.study.dto.response.StudyGroupResponse;
+import com.project.community.domain.study.dto.StudyGroupRequest;
+import com.project.community.domain.study.dto.StudyGroupResponse;
 import com.project.community.domain.study.entity.StudyGroup;
 import com.project.community.domain.user.entity.User;
 import org.json.simple.parser.ParseException;
@@ -27,4 +27,20 @@ public interface StudyGroupService {
     void addSkill(Skill skill,Long studyGroupId);
 
     Set<Skill> getSkills(Long studyGroupId);
+
+    List<StudyGroupResponse> studyCreatedByMe(String nickname);
+
+    List<StudyGroupResponse> joinedStudy(User user);
+
+    List<StudyGroupResponse> closedStudy(User user);
+
+    List<StudyGroupResponse> enrolledStudy(User user);
+
+    List<StudyGroupResponse> getOpenStudyGroup(String sortValue);
+
+    List<StudyGroupResponse> getClosedStudyGroup(String sortValue);
+
+    int updateView(Long id);
+
+    void deleteStudyGroup(User user, Long studyGroupId);
 }

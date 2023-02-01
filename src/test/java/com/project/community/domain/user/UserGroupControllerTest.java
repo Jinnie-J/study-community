@@ -1,8 +1,8 @@
 package com.project.community.domain.user;
 
 import com.project.community.domain.enrollment.repository.EnrollmentRepository;
-import com.project.community.domain.study.dto.request.StudyGroupRequest;
-import com.project.community.domain.study.dto.response.StudyGroupResponse;
+import com.project.community.domain.study.dto.StudyGroupRequest;
+import com.project.community.domain.study.dto.StudyGroupResponse;
 import com.project.community.domain.study.service.StudyGroupService;
 import com.project.community.domain.user.dto.SignUpForm;
 import com.project.community.domain.user.entity.User;

@@ -1,4 +1,4 @@
-package com.project.community.domain.study.dto.request;
+package com.project.community.domain.study.dto;
 
 import com.project.community.domain.location.entity.Location;
 import com.project.community.domain.study.entity.StudyGroup;
@@ -53,6 +53,8 @@ public class StudyGroupRequest implements Cloneable{
 
     private boolean closed;
 
+    private int view;
+
 
     public static StudyGroup toEntity(StudyGroupRequest studyGroupRequest){
         return StudyGroup.builder()
@@ -70,6 +72,7 @@ public class StudyGroupRequest implements Cloneable{
                 .studyStartDate(studyGroupRequest.getStudyStartDate())
                 .contactType(studyGroupRequest.getContactType())
                 .closed(studyGroupRequest.isClosed())
+                .view(studyGroupRequest.view)
                 .build();
     }
 

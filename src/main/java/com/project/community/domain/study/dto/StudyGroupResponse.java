@@ -1,4 +1,4 @@
-package com.project.community.domain.study.dto.response;
+package com.project.community.domain.study.dto;
 
 import com.project.community.domain.comment.dto.CommentResponse;
 import com.project.community.domain.location.entity.Location;
@@ -59,6 +59,8 @@ public class StudyGroupResponse {
 
     private List<CommentResponse> comments;
 
+    private int view;
+
     public static StudyGroupResponse fromEntity(StudyGroup studyGroup){
         return StudyGroupResponse.builder()
                 .studyGroupId(studyGroup.getId())
@@ -76,6 +78,7 @@ public class StudyGroupResponse {
                 .remainingSeats(studyGroup.getRemainingSeats())
                 .studyStartDate(studyGroup.getStudyStartDate())
                 .closed(studyGroup.isClosed())
+                .view(studyGroup.getView())
                 .comments(studyGroup.getComments().stream().map(CommentResponse::new).collect(Collectors.toList()))
                 .build();
     }

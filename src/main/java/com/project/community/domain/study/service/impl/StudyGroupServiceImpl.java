@@ -1,10 +1,14 @@
 package com.project.community.domain.study.service.impl;
 
+import com.project.community.domain.enrollment.entity.Enrollment;
+import com.project.community.domain.enrollment.repository.EnrollmentRepository;
 import com.project.community.domain.skill.entity.Skill;
 import com.project.community.domain.skill.repository.SkillRepository;
-import com.project.community.domain.study.dto.request.StudyGroupRequest;
-import com.project.community.domain.study.dto.response.StudyGroupResponse;
+import com.project.community.domain.study.dto.StudyGroupRequest;
+import com.project.community.domain.study.dto.StudyGroupResponse;
 import com.project.community.domain.study.entity.StudyGroup;
+import com.project.community.domain.study.event.StudyCreatedEvent;
+import com.project.community.domain.study.event.StudyUpdateEvent;
 import com.project.community.domain.study.repository.StudyGroupRepository;
 import com.project.community.domain.study.service.StudyGroupService;
 import com.project.community.domain.user.enums.UserType;
@@ -17,6 +21,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -33,6 +39,8 @@ public class StudyGroupServiceImpl implements StudyGroupService {
     private final StudyGroupRepository studyGroupRepository;
     private final UserGroupRepository userGroupRepository;
     private final SkillRepository skillRepository;
+    private final EnrollmentRepository enrollmentRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public StudyGroupResponse createStudyGroup(User user, StudyGroupRequest studyGroupRequest) throws ParseException, CloneNotSupportedException {
@@ -43,7 +51,6 @@ public class StudyGroupServiceImpl implements StudyGroupService {
         studyGroupRequest.setSkills(skills);
 
         studyGroupRequest.setCreatedBy(user.getNickname());
-        //TODO : numberOfMembers도 반환타입 long으로 바꾸기
         studyGroupRequest.setRemainingSeats((long) Integer.parseInt(studyGroupRequest.getNumberOfMembers()));
         studyGroupRequest.setCreateDate(LocalDateTime.now());
         StudyGroup studyGroup = StudyGroupRequest.toEntity(studyGroupRequest);
@@ -58,6 +65,8 @@ public class StudyGroupServiceImpl implements StudyGroupService {
                 .build();
 
         userGroupRepository.save(userGroup);
+
+        eventPublisher.publishEvent(new StudyCreatedEvent(newStudyGroup));
 
         return StudyGroupResponse.fromEntity(newStudyGroup);
     }
@@ -92,12 +101,15 @@ public class StudyGroupServiceImpl implements StudyGroupService {
         studyGroup.update(studyGroupRequest.getTitle(), studyGroupRequest.getContent(), studyGroupRequest.getStudyType(),
                 studyGroupRequest.getNumberOfMembers(),studyGroupRequest.getLocation(), studyGroupRequest.getDuration(), studyGroupRequest.getStudyStartDate(),
                 studyGroupRequest.getMeetingType(), studyGroupRequest.getContactType());
+
+        eventPublisher.publishEvent(new StudyUpdateEvent(studyGroup, "스터디정보를 수정하였습니다."));
     }
 
     @Override
     public void closeStudyGroup(User user, Long studyGroupId) {
         StudyGroup studyGroup = validateDeleteStudyGroup(user, studyGroupId);
         studyGroup.close();
+        eventPublisher.publishEvent(new StudyUpdateEvent(studyGroup, "스터디를 마감하였습니다."));
     }
 
     //삭제 - 리더 권한 체크하기
@@ -137,5 +149,89 @@ public class StudyGroupServiceImpl implements StudyGroupService {
     public Set<Skill> getSkills(Long studyGroupId) {
         Optional<StudyGroup> studyGroupById = studyGroupRepository.findById(studyGroupId);
         return studyGroupById.orElseThrow().getSkills();
+    }
+
+    @Override
+    public List<StudyGroupResponse> studyCreatedByMe(String nickname) {
+        return studyGroupRepository.findByCreatedBy(nickname)
+                .stream()
+                .map(StudyGroupResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StudyGroupResponse> joinedStudy(User user) {
+        List<UserGroup> userGroupList = userGroupRepository.findByUserId(user.getId());
+        List<StudyGroup> studyGroupList = new ArrayList<>();
+        for(UserGroup userGroup : userGroupList){
+            StudyGroup studyGroup = userGroup.getStudyGroup();
+            if(!studyGroup.isClosed()) {
+                studyGroupList.add(userGroup.getStudyGroup());
+            }
+        }
+        return studyGroupList.stream()
+                .map(StudyGroupResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StudyGroupResponse> closedStudy(User user) {
+        List<UserGroup> userGroupList = userGroupRepository.findByUserId(user.getId());
+        List<StudyGroup> studyGroupList = new ArrayList<>();
+        for(UserGroup userGroup : userGroupList){
+            StudyGroup studyGroup = userGroup.getStudyGroup();
+            if(studyGroup.isClosed()) {
+                studyGroupList.add(userGroup.getStudyGroup());
+            }
+        }
+        return studyGroupList.stream()
+                .map(StudyGroupResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StudyGroupResponse> enrolledStudy(User user) {
+        List<Enrollment> enrollmentList = enrollmentRepository.findByUser(user);
+        List<StudyGroup> studyGroupList = new ArrayList<>();
+        for(Enrollment enrollment : enrollmentList){
+            if(!enrollment.isAccepted()){
+                studyGroupList.add(enrollment.getUserGroup().getStudyGroup());
+            }
+        }
+        return studyGroupList.stream()
+                .map(StudyGroupResponse::fromEntity)
+                .collect(Collectors.toList());
+
+    }
+
+    @Override
+    public List<StudyGroupResponse> getOpenStudyGroup(String sortValue) {
+        return studyGroupRepository.findAll(Sort.by(Sort.Direction.DESC, sortValue))
+                .stream()
+                .filter(studyGroup -> !studyGroup.isClosed())
+                .map(StudyGroupResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StudyGroupResponse> getClosedStudyGroup(String sortValue) {
+        return studyGroupRepository.findAll(Sort.by(Sort.Direction.DESC, sortValue))
+                .stream()
+                .filter(studyGroup -> studyGroup.isClosed())
+                .map(StudyGroupResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public int updateView(Long id) {
+        return studyGroupRepository.updateView(id);
+    }
+
+    @Override
+    public void deleteStudyGroup(User user, Long studyGroupId) {
+        StudyGroup studyGroup = validateDeleteStudyGroup(user, studyGroupId);
+        studyGroupRepository.delete(studyGroup);
+
+        eventPublisher.publishEvent(new StudyUpdateEvent(studyGroup, "스터디를 삭제하였습니다."));
     }
 }

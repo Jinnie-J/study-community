@@ -7,6 +7,8 @@ import com.project.community.domain.location.entity.Location;
 import com.project.community.domain.location.service.LocationService;
 import com.project.community.domain.skill.entity.Skill;
 import com.project.community.domain.skill.service.SkillService;
+import com.project.community.domain.study.dto.StudyGroupResponse;
+import com.project.community.domain.study.service.StudyGroupService;
 import com.project.community.domain.user.SignUpFormValidator;
 import com.project.community.domain.user.dto.Profile;
 import com.project.community.domain.user.dto.SignUpForm;
@@ -39,6 +41,8 @@ public class UserController {
     private final SkillService skillService;
     private final LocationService locationService;
     private final ObjectMapper objectMapper;
+
+    private final StudyGroupService studyGroupService;
 
     @InitBinder("signUpForm")
     public void initBinder(WebDataBinder webDataBinder) {
@@ -80,15 +84,15 @@ public class UserController {
         if(nickname == null){
             throw new IllegalArgumentException(nickname + "에 해당하는 사용자가 없습니다.");
         }
-        model.addAttribute(userByNickname);
+        model.addAttribute("user",userByNickname);
         model.addAttribute("isOwner", userByNickname.equals(user));
         return "user/profile";
     }
 
     @GetMapping("/profile/update")
     public String profileUpdateForm(Model model, @CurrentUser User user) throws JsonProcessingException {
-        model.addAttribute(user);
-        model.addAttribute(new Profile(user));
+        model.addAttribute("user",user);
+        model.addAttribute("profile", new Profile(user));
 
         Set<Skill> skills = userService.getSkills(user.getId());
         model.addAttribute("skills", skills.stream().map(Skill::getTitle).collect(Collectors.toList()));
@@ -106,12 +110,26 @@ public class UserController {
                                 Model model, RedirectAttributes attributes) throws ParseException {
         if (errors.hasErrors()) {
             model.addAttribute(user);
-            log.info("에러"+errors);
             return "user/profile-modify-form";
         }
         userService.updateProfile(user, profile);
         attributes.addFlashAttribute("message", "프로필을 수정했습니다.");
         return "redirect:/profile/update";
+    }
+
+    @GetMapping("/profile/study-group")
+    public String viewProfileStudyGroup(Model model, @CurrentUser User user){
+
+        List<StudyGroupResponse> myStudyGroupList = studyGroupService.studyCreatedByMe(user.getNickname());
+        List<StudyGroupResponse> joinedStudyList = studyGroupService.joinedStudy(user);
+        List<StudyGroupResponse> closedStudyList = studyGroupService.closedStudy(user);
+        List<StudyGroupResponse> enrolledStudyList = studyGroupService.enrolledStudy(user);
+
+        model.addAttribute("myStudyGroupList", myStudyGroupList);
+        model.addAttribute("joinedStudyList",joinedStudyList);
+        model.addAttribute("closedStudyList",closedStudyList);
+        model.addAttribute("enrolledStudyList", enrolledStudyList);
+        return "user/profile-study-group";
     }
 
 

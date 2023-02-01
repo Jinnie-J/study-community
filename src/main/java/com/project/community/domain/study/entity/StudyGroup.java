@@ -70,6 +70,9 @@ public class StudyGroup {
     @OrderBy("id asc")
     private List<Comment> comments = new ArrayList<>();
 
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int view;
+
     public void close(){
         this.closed = true;
     }
@@ -94,7 +97,7 @@ public class StudyGroup {
     }
     @Builder
     public StudyGroup(Long id, String title, String createdBy, String content, StudyType studyType, String numberOfMembers,Long remainingSeats ,Location location, ContactType contactType,
-                      String duration, MeetingType meetingType, Set skills, LocalDateTime studyStartDate, LocalDateTime createDate, LocalDateTime updateDate, Boolean closed){
+                      String duration, MeetingType meetingType, Set skills, LocalDateTime studyStartDate, LocalDateTime createDate, LocalDateTime updateDate, Boolean closed, int view){
         this.id = id;
         this.title = title;
         this.content = content;
@@ -111,6 +114,7 @@ public class StudyGroup {
         this.updateDate = updateDate;
         this.contactType = contactType;
         this.closed = closed;
+        this.view = view;
     }
 
 }
