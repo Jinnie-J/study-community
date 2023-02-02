@@ -77,18 +77,41 @@ public class StudyGroupController {
     }
 
     //스터디 그룹 전체 조회
-    @GetMapping(value={"/study-group/sort/{sortValue}", "/study-group"})
-    public String getAllStudyGroup(Model model, @PathVariable(required = false) String sortValue){
-        //모집 중인 모임 리스트
-        List<StudyGroupResponse> openStudyGroupList = studyGroupService.getOpenStudyGroup(sortValue);
-        model.addAttribute("openStudyGroupList", openStudyGroupList);
+    @GetMapping(value={"/study-group/sort/{sortValue}/{checked}", "/study-group"})
+    public String getAllStudyGroup(Model model, @PathVariable(required = false) String sortValue, @PathVariable Boolean checked){
+        if(checked) {
+            //모집 중인 모임 리스트
+            List<StudyGroupResponse> openStudyGroupList = studyGroupService.getOpenStudyGroup(sortValue);
+            model.addAttribute("studyGroupList", openStudyGroupList);
+            model.addAttribute("checked",true);
+        }
+        else{
+            //마감한 모임 리스트
+            List<StudyGroupResponse> closedStudyList = studyGroupService.getClosedStudyGroup(sortValue);
+            model.addAttribute("studyGroupList", closedStudyList);
+            model.addAttribute("checked",false);
+        }
+        return "index";
+    }
 
-        //마감한 모임 리스트
-        List<StudyGroupResponse> closedStudyList = studyGroupService.getClosedStudyGroup(sortValue);
-        model.addAttribute("closedStudyList", closedStudyList);
+    //모집중인 스터디 조회
+    @GetMapping("/study-group/openedStudy")
+    public String getOpenedStudyGroup(Model model){
+        List<StudyGroupResponse> openStudyGroupList = studyGroupService.getOpenStudyGroup("id");
+        model.addAttribute("studyGroupList", openStudyGroupList);
+        model.addAttribute("checked", true);
+        log.info("open스터디 "+ openStudyGroupList);
+        return "index";
+    }
 
-
-        return "study/study-group";
+    //마감한 스터디 조회
+    @GetMapping("/study-group/closedStudy")
+    public String getClosedStudyGroup(Model model){
+        List<StudyGroupResponse> closedStudyGroupList = studyGroupService.getClosedStudyGroup("id");
+        model.addAttribute("studyGroupList", closedStudyGroupList);
+        model.addAttribute("checked",false);
+        log.info("close 스터디" + closedStudyGroupList);
+        return "index";
     }
 
     //스터디 그룹 상세 조회
