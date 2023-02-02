@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<body class="">
+<div th:replace="fragments.html :: main-nav"></div>
+
+
+<div class="container-fluid bg-slider justify-content-center align-items-center flex-column">
+    <div style="text-align: center">
+        <img style="object-fit: fill" src="/img/banner.jpeg">
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-sm-10">
+            <div class="col-sm-2" style="margin-top: 20px;">
+                <form th:action="@{/search/study}" style="width:30vw; margin-left: 25vw;" method="get">
+                    <input class="form-control mr-sm-2" name="keyword" type="search" placeholder="모임 검색">
+                </form>
+            </div>
+            <div class="col-auto text-center" style="margin-top:20px">
+                <a class="btn btn-light" th:href="@{'/study-group/sort/view/true'}"> 조회수 순</a>
+                <a class="btn btn-light" th:href="@{'/study-group/sort/comment/true'}"> 댓글수 순</a>
+                <a class="btn btn-light" th:href="@{'/study-group/sort/id/true'}"> 최신순</a>
+                <input type="checkbox" name="open" id="input_check" th:checked="${checked eq true}" onclick="getCheckBoxValue(this)" class="form-check-input">모집중
+            </div>
+            <div style="margin-top: 20px">
+                    <div class="row">
+                        <div class="col-md-4" th:each="study: ${studyGroupList}">
+                            <a th:href="@{'/study-group/' + ${study.studyGroupId}}" style="text-decoration: none; color: black">
+                                <div class="card" style="width: 90%; margin-bottom: 30px">
+                                    <div class="card-header">
+                                        <div class="card-header-text" style="float:right;">
+                                            남은 인원
+                                            <span th:text="${study.remainingSeats}"> </span> /
+                                            <span th:text="${study.numberOfMembers}"> </span>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="card-body-header">
+                                            시작 예정일 | <span th:text="${#temporals.format(study.studyStartDate,'yyyy-MM-dd')}" class="context"></span><br>
+                                            <h2 th:text="${study.title}" style="padding-top: 10px"></h2>
+                                            <p class="card-body-hashtag" style="padding-top:40px;">
+                                        <span th:each="skill: ${study.skills}" >
+                                            #<span th:text="${skill.title}">
+                                            </span>
+                                        </span>
+                                                #<span th:text="${study.location.localNameOfCity}">
+                                        </span>
+                                            </p>
+                                            <p class="card-body-nickname">
+                                                작성자: <span th:text="${study.createdBy}"></span>
+                                            </p>
+                                        </div>
+                                        <div class="card-body-footer">
+                                            <hr style="margin-bottom: 8px; opacity: 0.5; border-color: #EF5A31">
+                                            <div>
+                                                <i class="bi bi-eye"></i> <span th:text="${study.view}"></span>
+                                                <i class="bi bi-chat-left"></i> <span th:text="${#lists.size(study.comments)}"></span>
+                                                <i class="reg_date" style="float:right;">
+                                                    <span th:text="${#temporals.format(study.createDate,'yyyy-MM-dd')}" class="context"></span>
+                                                </i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments.html :: footer"></div>
+</div>
+<script src="/node_modules/jquery/dist/jquery.min.js"></script>
+<script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script type="application/javascript">
+
+    function getCheckBoxValue(check){
+        var header = $("meta[name='_csrf_header']").attr('content');
+        var token = $("meta[name='_csrf']").attr('content');
+
+        if(check.checked == true){
+            location.href='/study-group/openedStudy';
+        }
+        else{
+            location.href='/study-group/closedStudy';
+        }
+    }
+</script>
+</body>
+</html>
