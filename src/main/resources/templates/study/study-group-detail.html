@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments.html :: head">
+</head>
+<style>
+    .studyInfo{column-count: 2;}
+    .projectInfo{padding-top: 100px;}
+
+    @media (min-width: 576px) {
+        .rounded-nav {
+            border-radius: 50rem !important;
+        }
+    }
+
+    @media (min-width: 576px) {
+        .rounded-nav .nav-link {
+            border-radius: 50rem !important;
+        }
+    }
+
+    .with-arrow .nav-link.active {
+        position: relative;
+    }
+
+    .with-arrow .nav-link.active::after {
+        content: '';
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 6px solid #2b90d9;
+        position: absolute;
+        bottom: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: block;
+    }
+
+    /* lined tabs */
+
+    .lined .nav-link {
+        border: none;
+        border-bottom: 3px solid transparent;
+    }
+
+    .lined .nav-link:hover {
+        border: none;
+        border-bottom: 3px solid transparent;
+    }
+
+    .lined .nav-link.active {
+        background: none;
+        color: #555;
+        border-color: #2b90d9;
+    }
+
+    .nav-pills .nav-link {
+        color: #555;
+    }
+    .text-uppercase {
+        letter-spacing: 0.1em;
+    }
+
+</style>
+<body class="bg-light">
+<div th:replace="fragments.html :: main-nav"></div>
+
+<div class="container">
+    <div class="row mt-5 justify-content-center">
+        <div class="py-5 text-center">
+            <h3 th:text="${studyGroup.title}" class="context"></h3>
+            <div>
+            <span th:text="${studyGroup.createdBy}" id="createdBy"></span> |
+            <span th:text="${#temporals.format(studyGroup.createDate,'yyyy-MM-dd')}" id="createDate"></span>
+            </div>
+            <small class="text-success" th:if="${userGroup.isAccepted(#authentication.principal)}" >참석 완료</small>
+            <small class="text-success" th:if="${studyGroup.remainingSeats} == 0" >인원 모집 마감</small>
+        </div>
+
+
+        <div class="col-6 p-5 big-white rounded shadow mb-5">
+            <ul class="nav nav-tabs nav-pills flex-column flex-sm-row text-center bg-light border-0 rounded-nav">
+                <li class="nav-item flex-sm-fill" role="presentation">
+                    <a class="nav-link border-0 text-uppercase font-weight-bold active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true"> 정보 </a>
+                </li>
+                <li class="nav-item flex-sm-fill">
+                    <a class="nav-link border-0 text-uppercase font-weight-bold" id="people-tab" data-bs-toggle="tab" data-bs-target="#people" type="button" role="tab" aria-controls="people" aria-selected="false"> 모집 현황 </a>
+                </li>
+                <li class="nav-item flex-sm-fill">
+                    <a class="nav-link border-0 text-uppercase font-weight-bold" id="story-tab" data-bs-toggle="tab" data-bs-target="#story" type="button" role="tab" aria-controls="story" aria-selected="false"> 질문 </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade px-4 py-5 show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <div th:if="${message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+                        <span th:text="${message}">메시지</span>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+<!--                    <div class="top-information">-->
+<!--                    <span th:text="${studyGroup.createdBy}" id="createdBy"></span> |-->
+<!--                    <span th:text="${#temporals.format(studyGroup.createDate,'yyyy-MM-dd')}" id="createDate"></span>-->
+
+<!--                    </div>-->
+                    <div style="float:right">
+                    <form class="col-sm-12" action="#" th:action="@{'/study-group/close/' + ${studyGroup.studyGroupId}}" method="post" novalidate>
+                        <button th:if="${userGroup.isLeader(#authentication.principal)}" class="btn btn-outline-warning" type="submit" aria-describedby="submitHelp">스터디 종료</button>
+                    </form>
+                    </div>
+                    <div class="studyInfo">
+                        <div class="mb-3 row">
+                            <label for="studyStartDate" class="col-sm-4 col-form-label">시작 예정</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly th:value="${#temporals.format(studyGroup.studyStartDate,'yyyy-MM-dd')}" class="form-control-plaintext" id="studyStartDate">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="localNameOfCity" class="col-sm-4 col-form-label">지역</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly th:value="${studyGroup.location.localNameOfCity}" class="form-control-plaintext" id="localNameOfCity">
+                            </div>
+                        </div>
+<!--                        <div class="mb-3 row">-->
+<!--                            <label for="closed" class="col-sm-4 col-form-label">마감 여부</label>-->
+<!--                            <div class="col-sm-8">-->
+<!--                                <input type="text" readonly th:value="${studyGroup.closed}" class="form-control-plaintext" id="closed">-->
+<!--                            </div>-->
+<!--                        </div>-->
+                        <div class="mb-3 row">
+                            <label for="studyType" class="col-sm-4 col-form-label">모집 구분</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly th:value="${studyGroup.studyType.label()}" class="form-control-plaintext" id="studyType">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="contactType" class="col-sm-4 col-form-label">연락 방법</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly th:value="${studyGroup.contactType.label()}" class="form-control-plaintext" id="contactType">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="numberOfMembers" class="col-sm-4 col-form-label">모집 인원</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly th:value="${studyGroup.numberOfMembers}+명" class="form-control-plaintext" id="numberOfMembers">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label class="col-sm-4 col-form-label">사용 기술</label>
+                            <div class="col-sm-8">
+                                <th:block th:each="skill : ${studyGroup.skills}">
+                                    <th:block th:text="${skill.title}"></th:block>
+                                </th:block>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="meetingType" class="col-sm-4 col-form-label">진행 방식</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly th:value="${studyGroup.meetingType.label()}" class="form-control-plaintext" id="meetingType">
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="duration" class="col-sm-4 col-form-label">기간</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly th:value="${studyGroup.duration}+개월" class="form-control-plaintext" id="duration">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="projectInfo">
+                        <h2> 프로젝트 소개</h2>
+                        <span th:utext="${studyGroup.content}" class="context"></span>
+                    </div>
+                    <div class="form-group" style="float: right;">
+                        <a th:if="${userGroup.isLeader(#authentication.principal)}"
+                           class="btn btn-secondary btn-block" th:href="@{'/study-group/update/' + ${studyGroup.studyGroupId}}">수정</a>
+                        <a th:if="${userGroup.isLeader(#authentication.principal)}"
+                           class="btn btn-secondary btn-block" th:href="@{'/study-group/delete/' + ${studyGroup.studyGroupId}}">삭제</a>
+                    </div>
+                    <div style="float:right">
+                        <span sec:authorize="isAuthenticated()">
+                        <form class="col-sm-12" action="#" th:action="@{'/study-group/' + ${studyGroup.studyGroupId} + '/enroll'}" method="post" novalidate>
+                            <button th:if="${userGroup.isEnrollableFor(#authentication.principal)} and ${studyGroup.remainingSeats} > 0"
+                                    class="btn btn-secondary btn-block" type="submit" aria-describedby="submitHelp">참가 신청</button>
+                        </form>
+
+                        <form class="col-sm-12" action="#" th:action="@{'/study-group/' + ${studyGroup.studyGroupId} + '/disenroll'}" method="post" novalidate>
+                            <button th:if="${userGroup.isDisenrollableFor(#authentication.principal)}"
+                                    class="btn btn-secondary btn-block" type="submit" aria-describedby="submitHelp">참가 신청 취소</button>
+                        </form>
+                        </span>
+                    </div>
+
+
+                </div>
+                <div class="tab-pane fade px-4 py-5" id="people" role="tabpanel" aria-labelledby="people-tab">
+                    <table class="table table-borderless table-sm" th:if="${userGroup.enrollments.size() > 0 }">
+                        <thead>
+                        <tr>
+                            <th scope="col">참석자</th>
+                            <th scope="col">참가 신청 날짜</th>
+                            <th scope="col">참가 상태</th>
+                            <th th:if="${userGroup.isLeader(#authentication.principal)}" scope="col">
+                                참가 신청 관리
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="enroll: ${userGroup.enrollments}">
+                            <td>
+                                <span th:text="${enroll.user.nickname}"></span>
+                            </td>
+                            <td>
+                                <span class="date-time" th:text="${#temporals.format(enroll.enrolledAt,'yyyy-MM-dd')}"></span>
+                            </td>
+                            <td>
+                                <span th:if="${enroll.accepted}">확정</span>
+                                <span th:if="${!enroll.accepted}">대기중</span>
+                            </td>
+                            <!-- 여기는 그룹 리더가 허락/거절 선택하는 링크 부분 -->
+                            <td th:if="${userGroup.isLeader(#authentication.principal)}">
+                                <a th:if="${userGroup.isAcceptable(enroll)}" href="#" class="text-decoration-none" th:href="@{'/study-group/' + ${studyGroupId} + '/user-group/' + ${userGroup.id} + '/enrollments/'+ ${enroll.id} + '/accept'}">신청 수락</a>
+                                <a th:if="${userGroup.isRejectable(enroll)}" href="#" class="text-decoration-none" th:href="@{'/study-group/' + ${studyGroupId} + '/user-group/' + ${userGroup.id} + '/enrollments/'+ ${enroll.id} + '/reject'}">취소</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade px-4 py-5" id="story" role="tabpanel" aria-labelledby="story-tab">
+                    <div class="card mb-2">
+                        <div class="card-header bg-light">
+                            <i class="fa fa-comment fa"></i> 문의하기
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <input type="hidden" id="studyGroupId" th:value="${studyGroup.studyGroupId}">
+                                    <textarea class="form-control" id="comment" rows="3"></textarea>
+                                    <button type="button" class="btn btn-dark mt-3" id="addReply">등록</button>
+                                </li>
+                            </ul>
+                            <div class="card">
+                                <div class="card-header"> <span th:text="${comments.size()}"></span> Comments
+                                    <ul class="list-group-flush">
+                                        <span th:each="comment: ${comments}">
+                                            <li class="list-group-item">
+                                                <span>
+                                                    <span th:text="${comment.nickname}" style="font-size: small"></span>
+                                                    <span th:text="${comment.createdDate}" style="font-size: xx-small"></span>
+                                                </span>
+
+                                                <span th:if="${comment.nickname} == ${user.nickname}">
+                                                <a type="button" data-bs-toggle="collapse" th:data-bs-target="${'#commentCollapse'+ comment.id}"
+                                                   aria-expanded="false" aria-controls="collapseExample" class="bi bi-pencil-square"></a>
+                                                <a type="button" class="bi bi-x-square" th:onclick="main.commentDelete( [[ ${comment.id} ]] )"></a>
+                                                </span>
+                                                <p class="collapse show">
+                                                    <span th:utext="${comment.comment}"></span>
+                                                </p>
+                                                <form class="collapse" th:id="${'commentCollapse'+ comment.id}">
+                                                    <input type="hidden" id="commentId" th:value="${comment.id}">
+                                                    <input type="hidden" id="postsId" th:value="${studyGroup.studyGroupId}">
+                                                        <textarea class="form-control" id="comment-content" rows="3"></textarea>
+                                                    <button type="button" id="btn-comment-update" class="btn btn-outline-primary bi bi-pencil-square">수정</button>
+                                                </form>
+                                            </li>
+                                        </span>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                    </div>
+                </div>
+        </div>
+    </div>
+    </div>
+    <div th:replace="fragments.html :: footer"></div>
+
+</div>
+<script src="/node_modules/jquery/dist/jquery.min.js"></script>
+<script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script type="application/javascript">
+    $(function(){
+        var header = $("meta[name='_csrf_header']").attr('content');
+        var token = $("meta[name='_csrf']").attr('content');
+
+        $("#addReply").on('click', function(){
+            const data={
+                studyGroupId : $('#studyGroupId').val(),
+                comment: $("#comment").val().replace(/\n/g, "<br>")
+            }
+            if(!data.comment || data.comment.trim() ===""){
+                alert("댓글을 입력하세요.");
+                return false;
+            }else{
+                $.ajax({
+                    type: 'POST',
+                    beforeSend: function(xhr){
+                        xhr.setRequestHeader(header, token);
+                    },
+                    url: '/study-group/'+ data.studyGroupId + '/comments',
+                    data: JSON.stringify({'comment': data.comment}),
+                    //dataType: 'JSON',
+                    contentType: 'application/json; charset=utf-8'
+                }).done(function(){
+                    alert("댓글이 등록되었습니다.");
+                    window.location.reload();
+                }).fail(function (error){
+                    alert(JSON.stringify(error));
+                });
+            }
+        });
+    });
+
+    const main = {
+        init : function() {
+            const _this = this
+
+            // 댓글 수정
+            document.querySelectorAll('#btn-comment-update').forEach(function (item) {
+                item.addEventListener('click', function () { // 버튼 클릭 이벤트 발생시
+                    const form = this.closest('form'); // btn의 가장 가까운 조상의 Element(form)를 반환 (closest)
+                    _this.commentUpdate(form); // 해당 form으로 업데이트 수행
+                });
+            });
+        },
+
+        /** 댓글 수정 */
+        commentUpdate : function (form) {
+            var header = $("meta[name='_csrf_header']").attr('content');
+            var token = $("meta[name='_csrf']").attr('content');
+            const data={
+                studyGroupId : $('#studyGroupId').val(),
+                commentId: form.querySelector('#commentId').value,
+                comment : form.querySelector('#comment-content').value
+            }
+            if (!data.comment || data.comment.trim() === "") {
+                alert("공백 또는 입력하지 않은 부분이 있습니다.");
+                return false;
+            }
+            const con_check = confirm("수정하시겠습니까?");
+            if (con_check === true) {
+                $.ajax({
+                    type: 'PUT',
+                    beforeSend: function(xhr){
+                        xhr.setRequestHeader(header, token);
+                    },
+                    url: '/study-group/'+ data.studyGroupId + '/comments/' + data.commentId,
+                    dataType: 'JSON',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(data)
+                }).done(function () {
+                    window.location.reload();
+                }).fail(function (error) {
+                    alert(JSON.stringify(error));
+                });
+            }
+    },
+    /** 댓글 삭제 */
+    commentDelete : function (commentId) {
+
+        var header = $("meta[name='_csrf_header']").attr('content');
+        var token = $("meta[name='_csrf']").attr('content');
+        const data={
+            studyGroupId : $('#studyGroupId').val()
+        }
+        const con_check = confirm("삭제하시겠습니까?");
+        if(con_check === true){
+            $.ajax({
+                type: 'DELETE',
+                beforeSend: function(xhr){
+                    xhr.setRequestHeader(header, token);
+                },
+                url: '/study-group/'+ data.studyGroupId + '/comments/' + commentId,
+                dataType: 'JSON',
+                contentType: 'application/json; charset=utf-8'
+            }).done(function () {
+                alert('댓글이 삭제되었습니다.');
+                window.location.reload();
+            }).fail(function (error) {
+                alert(JSON.stringify(error));
+            });
+        }
+    }
+    };
+
+    main.init();
+
+</script>
+</body>
+</html>
