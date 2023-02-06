@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<style>
+    .studyInfo{
+        column-count: 2;
+    }
+    .projectInfo{padding-top: 50px;}
+    .form-group{
+        margin-bottom: 10px;
+    }
+</style>
+<body class="bg-light">
+<div th:replace="fragments.html :: main-nav"></div>
+
+<div class="container">
+    <div class="row mt-5 justify-content-center">
+        <div class="py-3 text-center">
+        </div>
+        <div class="col-6">
+            <h3>프로젝트 기본 정보를 입력해주세요.</h3><br>
+            <form class="needs-validation col-sm-10" th:action="@{/study-group/create}" th:object="${studyGroupRequest}" method="post" novalidate>
+                <div class="studyInfo">
+                <div class="form-group">
+                    <label>모집 구분</label>
+                    <select class="form-select" th:field="*{studyType}">
+                        <option th:each="studyType : ${T(com.project.community.domain.study.enums.StudyType).values()}" th:value="${studyType.name()}" th:text="${studyType.label()}">
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>진행 방식</label>
+                    <select class="form-select" th:field="*{meetingType}">
+                        <option th:each="meetingType : ${T(com.project.community.domain.study.enums.MeetingType).values()}" th:value="${meetingType.name()}" th:text="${meetingType.label()}">
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="location">지역</label>
+                    <select id="location" th:field="*{location}" class="form-select">
+                        <option value =" "> 지역 선택 </option>
+                        <option th:each ="location : ${locationList}" th:value="${location.id}" th:text="${location.localNameOfCity}">
+                        </option>
+                    </select>
+                </div>
+                    <div class="form-group" style="padding-bottom: 30px;">
+                        <label>연락 방법</label>
+                        <select class="form-select" th:field="*{contactType}">
+                            <option th:each="contactType : ${T(com.project.community.domain.study.enums.ContactType).values()}" th:value="${contactType.name()}" th:text="${contactType.label()}">
+                            </option>
+                        </select>
+                    </div>
+                <div class="form-group">
+                    <label for="numberOfMembers">모집 인원</label>
+                    <select id="numberOfMembers" th:field="*{numberOfMembers}" class="form-select">
+                        <option th:value="|인원 미정|" th:text="|인원 미정|"></option>
+                        <option th:each="num: ${#numbers.sequence(1,9)}" th:value="${num}" th:text="${num}+명"></option>
+                        <option th:value="|10명 이상|" th:text="|10명 이상|"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="duration">진행 기간</label>
+                    <select id="duration" th:field="*{duration}" class="form-select">
+                        <option th:value="|기간 미정|" th:text="|기간 미정|"></option>
+                        <option th:each="duration: ${#numbers.sequence(1,6)}" th:value="${duration}" th:text="${duration}+개월"></option>
+                        <option th:value="장기" th:text="장기"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="studyStartDate">시작 예정일</label>
+                    <input id="studyStartDate" type="datetime-local" th:field="*{studyStartDate}" class="form-control" placeholder="지역" required>
+                </div>
+                    <div class="form-group">
+                        <label for="skills">사용 기술</label>
+                        <div id="skillList" th:text="${skillList}" hidden></div>
+                        <input id="skills" type="text" name="skills" th:field="*{skills}" class="tagify-outside" aria-describedby="tagHelp" required>
+                    </div>
+                </div>
+                <div class="projectInfo">
+                    <h3>프로젝트에 대해 소개해주세요.</h3>
+                <div class="form-group">
+                    <label for="title">제목</label>
+                    <input id="title" type="text" th:field="*{title}" class="form-control" placeholder="글 제목을 입력해주세요." required>
+                    <small class="invalid-feedback">스터디 이름을 입력하세요.</small>
+                    <small class="form-text text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title Error</small>
+                </div>
+                <div class="form-group">
+                    <label for="content">내용</label>
+                    <textarea id="content" th:field="*{content}" class="form-control" placeholder="프로젝트에 대해 소개해주세요."></textarea>
+                </div>
+                </div>
+                <div class="row mt-3" style="float:right;">
+                <div class="form-group">
+                    <button class="btn btn-primary btn-bloock" type="submit" aria-describedby="submitHelp">새 글 등록</button>
+                </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div th:replace="fragments.html :: footer"></div>
+</div>
+<script src="/node_modules/jquery/dist/jquery.min.js"></script>
+<script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/node_modules/summernote/dist/summernote-bs4.js"></script>
+<script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+<script type="application/javascript">
+    $(function(){
+        $('#content').summernote({
+            tabsize: 2,
+            height: 300
+        });
+        var tagInput = document.querySelector("#skills");
+
+        var tagify= new Tagify(tagInput, {
+            pattern: /^.{0,20}$/,
+            skillList: JSON.parse(document.querySelector("#skillList").textContent),
+            dropdown: {
+                enabled:1,
+            }
+        });
+        tagify.DOM.input.classList.add('form-control');
+        tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input, tagify.DOM.scope);
+    });
+
+</script>
+</body>
+</html>
