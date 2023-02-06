@@ -54,6 +54,9 @@ public class UserController {
         if (user != null){
             model.addAttribute(user);
         }
+        List<StudyGroupResponse> openStudyGroupList = studyGroupService.getOpenStudyGroup("id");
+        model.addAttribute("studyGroupList", openStudyGroupList);
+        model.addAttribute("checked",true);
         return "index";
     }
 
