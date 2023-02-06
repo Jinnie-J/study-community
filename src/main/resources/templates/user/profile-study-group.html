@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head">
+    <style>
+        a{
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body class="bg-light">
+<div th:replace="fragments.html :: main-nav"></div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="py-5 text-center">
+            <h3>나의 모임</h3>
+        </div>
+        <div class="col-sm-10">
+            <ul class="nav nav-tabs">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="myStudy-tab" data-bs-toggle="tab" data-bs-target="#myStudy" type="button" role="tab" aria-controls="myStudy" aria-selected="true"> 내가 만든 모임 </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="joinedStudy-tab" data-bs-toggle="tab" data-bs-target="#joinedStudy" type="button" role="tab" aria-controls="joinedStudy" aria-selected="false"> 참가 중인 모임 </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="enrolledStudy-tab" data-bs-toggle="tab" data-bs-target="#enrolledStudy" type="button" role="tab" aria-controls="enrolledStudy" aria-selected="false"> 신청 대기 중인 모임 </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="closedStudy-tab" data-bs-toggle="tab" data-bs-target="#closedStudy" type="button" role="tab" aria-controls="closedStudy" aria-selected="false"> 지난 모임 </button>
+                </li>
+            </ul>
+            <div class="tab-content" style="margin-top: 50px">
+                <div class="tab-pane fade show active" id="myStudy" role="tabpanel" aria-labelledby="myStudy-tab">
+                    <div class="row">
+                        <div class="col-md-4" th:each="study: ${myStudyGroupList}">
+                            <a th:href="@{'/study-group/' + ${study.studyGroupId}}" style="text-decoration: none; color: black">
+                                <div class="card" style="width: 90%; margin-bottom: 30px">
+                                    <div class="card-header">
+                                        <div class="card-header-text" style="float:right;">
+                                            남은 인원
+                                            <span th:text="${study.remainingSeats}"> </span> /
+                                            <span th:text="${study.numberOfMembers}"> </span>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="card-body-header">
+                                            시작 예정일 | <span th:text="${#temporals.format(study.studyStartDate,'yyyy-MM-dd')}" class="context"></span><br>
+                                            <h2 th:text="${study.title}" style="padding-top: 10px"></h2>
+                                            <p class="card-body-hashtag" style="padding-top:40px;">
+                                            <span th:each="skill: ${study.skills}" >
+                                                #<span th:text="${skill.title}"></span>
+                                            </span>
+                                                #<span th:text="${study.location.localNameOfCity}"></span>
+                                            </p>
+                                            <p class="card-body-nickname">
+                                                작성자: <span th:text="${study.createdBy}"></span>
+                                            </p>
+                                        </div>
+                                        <div class="card-body-footer">
+                                            <hr style="margin-bottom: 8px; opacity: 0.5; border-color: #EF5A31">
+                                            <i class="icon icon-view_count"></i>조회 38회
+                                            <i class="icon icon-comments_count"></i>댓글 4개
+                                            <i class="reg_date" style="float:right;">
+                                                <span th:text="${#temporals.format(study.createDate,'yyyy-MM-dd')}" class="context"></span>
+                                            </i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="tab-pane fade" id="joinedStudy" role="tabpanel" aria-labelledby="people-tab">
+                    <div class="row">
+                        <div class="col-md-4" th:each="study: ${joinedStudyList}">
+                            <a th:href="@{'/study-group/' + ${study.studyGroupId}}" style="text-decoration: none; color: black">
+                                <div class="card" style="width: 90%; margin-bottom: 30px">
+                                    <div class="card-header">
+                                        <div class="card-header-text" style="float:right;">
+                                            남은 인원
+                                            <span th:text="${study.remainingSeats}"> </span> /
+                                            <span th:text="${study.numberOfMembers}"> </span>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="card-body-header">
+                                            시작 예정일 | <span th:text="${#temporals.format(study.studyStartDate,'yyyy-MM-dd')}" class="context"></span><br>
+                                            <h2 th:text="${study.title}" style="padding-top: 10px"></h2>
+                                            <p class="card-body-hashtag" style="padding-top:40px;">
+                                            <span th:each="skill: ${study.skills}" >
+                                                #<span th:text="${skill.title}"></span>
+                                            </span>
+                                                #<span th:text="${study.location.localNameOfCity}"></span>
+                                            </p>
+                                            <p class="card-body-nickname">
+                                                작성자: <span th:text="${study.createdBy}"></span>
+                                            </p>
+                                        </div>
+                                        <div class="card-body-footer">
+                                            <hr style="margin-bottom: 8px; opacity: 0.5; border-color: #EF5A31">
+                                            <i class="icon icon-view_count"></i>조회 38회
+                                            <i class="icon icon-comments_count"></i>댓글 4개
+                                            <i class="reg_date" style="float:right;">
+                                                <span th:text="${#temporals.format(study.createDate,'yyyy-MM-dd')}" class="context"></span>
+                                            </i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="closedStudy" role="tabpanel" aria-labelledby="closedStudy-tab">
+                    <div class="row">
+                        <div class="col-md-4" th:each="study: ${closedStudyList}">
+                            <a th:href="@{'/study-group/' + ${study.studyGroupId}}" style="text-decoration: none; color: black">
+                                <div class="card" style="width: 90%; margin-bottom: 30px">
+                                    <div class="card-header">
+                                        <div class="card-header-text" style="float:right;">
+                                            남은 인원
+                                            <span th:text="${study.remainingSeats}"> </span> /
+                                            <span th:text="${study.numberOfMembers}"> </span>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="card-body-header">
+                                            시작 예정일 | <span th:text="${#temporals.format(study.studyStartDate,'yyyy-MM-dd')}" class="context"></span><br>
+                                            <h2 th:text="${study.title}" style="padding-top: 10px"></h2>
+                                            <p class="card-body-hashtag" style="padding-top:40px;">
+                                            <span th:each="skill: ${study.skills}" >
+                                                #<span th:text="${skill.title}"></span>
+                                            </span>
+                                                #<span th:text="${study.location.localNameOfCity}"></span>
+                                            </p>
+                                            <p class="card-body-nickname">
+                                                작성자: <span th:text="${study.createdBy}"></span>
+                                            </p>
+                                        </div>
+                                        <div class="card-body-footer">
+                                            <hr style="margin-bottom: 8px; opacity: 0.5; border-color: #EF5A31">
+                                            <i class="icon icon-view_count"></i>조회 38회
+                                            <i class="icon icon-comments_count"></i>댓글 4개
+                                            <i class="reg_date" style="float:right;">
+                                                <span th:text="${#temporals.format(study.createDate,'yyyy-MM-dd')}" class="context"></span>
+                                            </i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="enrolledStudy" role="tabpanel" aria-labelledby="enrolledStudy-tab">
+                    <div class="row">
+                        <div class="col-md-4" th:each="study: ${enrolledStudyList}">
+                            <a th:href="@{'/study-group/' + ${study.studyGroupId}}" style="text-decoration: none; color: black">
+                                <div class="card" style="width: 90%; margin-bottom: 30px">
+                                    <div class="card-header">
+                                        <div class="card-header-text" style="float:right;">
+                                            남은 인원
+                                            <span th:text="${study.remainingSeats}"> </span> /
+                                            <span th:text="${study.numberOfMembers}"> </span>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="card-body-header">
+                                            시작 예정일 | <span th:text="${#temporals.format(study.studyStartDate,'yyyy-MM-dd')}" class="context"></span><br>
+                                            <h2 th:text="${study.title}" style="padding-top: 10px"></h2>
+                                            <p class="card-body-hashtag" style="padding-top:40px;">
+                                            <span th:each="skill: ${study.skills}" >
+                                                #<span th:text="${skill.title}"></span>
+                                            </span>
+                                                #<span th:text="${study.location.localNameOfCity}"></span>
+                                            </p>
+                                            <p class="card-body-nickname">
+                                                작성자: <span th:text="${study.createdBy}"></span>
+                                            </p>
+                                        </div>
+                                        <div class="card-body-footer">
+                                            <hr style="margin-bottom: 8px; opacity: 0.5; border-color: #EF5A31">
+                                            <i class="icon icon-view_count"></i>조회 38회
+                                            <i class="icon icon-comments_count"></i>댓글 4개
+                                            <i class="reg_date" style="float:right;">
+                                                <span th:text="${#temporals.format(study.createDate,'yyyy-MM-dd')}" class="context"></span>
+                                            </i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="fragments.html :: footer"></div>
+</div>
+<script src="/node_modules/jquery/dist/jquery.min.js"></script>
+<script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script type="application/javascript">
+    (function () {
+
+    }())
+</script>
+</body>
+</html>
