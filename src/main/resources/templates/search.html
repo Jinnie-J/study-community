@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head">
+</head>
+<style>
+    .card{
+        padding: 1.5em .5em .5em;
+        border-radius: 2em;
+        box-shadow: 0 5px 10px rgba(0,0,0,.2);
+        width: 90%;
+        margin-bottom: 30px;
+    }
+
+    .card-header {
+        background-color: white;
+    }
+
+</style>
+<body class="bg-light">
+<div th:replace="fragments.html :: main-nav"></div>
+
+<div class="container">
+    <div class="py-5 text-center">
+        <p class="lead" th:if="${studyGroupPage.getTotalElements() == 0}">
+            <strong th:text="${keyword}" id="keyword" class="context"></strong>에 해당하는 게시글이 없습니다.
+        </p>
+        <p class="lead" th:if="${studyGroupPage.getTotalElements() > 0}" >
+            <strong th:text="${keyword}" id="keyword" class="context"></strong>에 해당하는 게시글을
+            <span th:text="${studyGroupPage.getTotalElements()}"></span>개 찾았습니다.
+        </p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-sm-10">
+            <div class="row">
+                <div class="col-md-4" th:each="study: ${studyGroupPage.getContent()}">
+                    <a th:href="@{'/study-group/' + ${study.id}}" style="text-decoration: none; color: black">
+                        <div class="card" style="width: 90%; margin-bottom: 30px">
+                            <div class="card-header">
+                                <div class="card-header-text" style="float:right;">
+                                    남은 인원
+                                    <span th:text="${study.remainingSeats}"> </span> /
+                                    <span th:text="${study.numberOfMembers}"> </span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-body-header">
+                                    시작 예정일 | <span th:text="${#temporals.format(study.studyStartDate,'yyyy-MM-dd')}" class="context"></span><br>
+                                    <h2 th:text="${study.title}" class="card-title context" style="padding-top: 10px"></h2>
+
+                                    <p class="card-body-hashtag context" style="padding-top:40px;">
+                                    <span th:each="skill: ${study.skills}" >
+                                        #<span th:text="${skill.title}"></span>
+                                    </span>
+                                        #<span th:text="${study.location.localNameOfCity}"></span>
+                                    </p>
+                                    <p class="card-body-nickname">
+                                        작성자: <span th:text="${study.createdBy}"></span>
+                                    </p>
+                                </div>
+                                <div class="card-body-footer">
+                                    <hr style="margin-bottom: 8px; opacity: 0.5; border-color: #EF5A31">
+                                    <i class="icon icon-view_count"></i>조회 38회
+                                    <i class="icon icon-comments_count"></i>댓글 4개
+                                    <i class="reg_date" style="float:right;">
+                                        <span th:text="${#temporals.format(study.createDate,'yyyy-MM-dd')}" class="context"></span>
+                                    </i>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-10">
+            <nav>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${!studyGroupPage.hasPrevious()}? disabled">
+                        <a th:href="@{'/search/study?keyword=' + ${keyword} + '&sort=' + ${sortProperty} +',desc&page=' +${studyGroupPage.getNumber()-1}}"
+                           class="page-link" tabindex="-1" aria-disabled="true">
+                            Previous
+                        </a>
+                    </li>
+
+                    <li class="page-item" th:classappend="${i == studyGroupPage.getNumber()}? active"
+                        th:each="i:${#numbers.sequence(0, studyGroupPage.getTotalPages()-1)}">
+                        <a th:href="@{'/search/study?keyword=' + ${keyword} + '&sort=' + ${sortProperty} +',desc&page=' +${i}}"
+                        class="page-link" href="#" th:text="${i+1}">1</a>
+                    </li>
+
+                    <li class="page-item" th:classappend="${!studyGroupPage.hasNext()}? disabled">
+                        <a th:href="@{'/search/study?keyword=' + ${keyword} + '&sort=' + ${sortProperty} +',desc&page=' +${studyGroupPage.getNumber()+1}}"
+                           class="page-link">
+                            Next
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+
+    <div th:replace="fragments.html :: footer"></div>
+</div>
+<script src="/node_modules/jquery/dist/jquery.min.js"></script>
+<script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/node_modules/mark.js/dist/jquery.mark.min.js"></script>
+<script type="application/javascript">
+    $(function () {
+        var mark = function (){
+            var keyword = $("#keyword").text();
+
+            var options = {
+                "each" : function (element){
+                    setTimeout(function(){
+                        $(element).addClass("animate");
+                    }, 150);
+                }
+            };
+            $(".context").unmark({
+                done: function(){
+                    $(".context").mark(keyword, options);
+                }
+            });
+        };
+        mark();
+    });
+</script>
+</body>
+</html>
