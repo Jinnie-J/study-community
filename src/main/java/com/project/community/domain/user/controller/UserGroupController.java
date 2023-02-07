@@ -43,7 +43,7 @@ public class UserGroupController {
                                    @PathVariable("userGroupId") UserGroup userGroup,
                                    @PathVariable("enrollmentId") Enrollment enrollment){
         userGroupService.acceptEnrollment(studyGroup, userGroup,enrollment);
-        return "redirect:/study-group/{studyGroupId}/people";
+        return "redirect:/study-group/{studyGroupId}";
     }
 
     //참가 신청 거절
@@ -52,6 +52,6 @@ public class UserGroupController {
                                    @PathVariable("userGroupId") UserGroup userGroup,
                                    @PathVariable("enrollmentId") Enrollment enrollment){
         userGroupService.rejectEnrollment(studyGroup, userGroup,enrollment);
-        return "redirect:/study-group/{studyGroupId}/people";
+        return "redirect:/study-group/{studyGroupId}";
     }
 }
