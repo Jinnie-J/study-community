@@ -16,11 +16,11 @@
     </div>
     <div class="col-sm-10">
       <div class="col-auto" style="margin-top:20px">
-        <a href="#" th:href="@{/notifications}" th:classappend="${isNew}? active" class="btn btn-primary">
+        <a href="#" th:href="@{/notifications}" th:classappend="${isNew}? active" class="btn btn-block">
           읽지 않은 알림
           <span th:text="${numberOfNotChecked}">3</span>
         </a>
-        <a href="#" th:href="@{/notifications/old}" th:classappend="${!isNew}? active" class="btn btn-primary">
+        <a href="#" th:href="@{/notifications/old}" th:classappend="${!isNew}? active" class="btn btn-block">
           읽은 알림
           <span th:text="${numberOfChecked}">0</span>
         </a>
