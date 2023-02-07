@@ -22,7 +22,7 @@ public class Profile {
 
     private Location location;
 
-    private Set<Skill> skills;
+    private Object skills;
 
     @NotBlank
     @Length(min = 8, max = 50)
