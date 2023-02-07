@@ -12,7 +12,7 @@
 
 <div class="container">
   <div class="row justify-content-center">
-    <div class="py-5 text-center">
+    <div class="py-4 text-center">
     </div>
     <div class="col-sm-10">
       <div class="col-auto" style="margin-top:20px">
@@ -39,7 +39,8 @@
           </div>
           <div class="card-body">
           <div th:each="newStudyNotification: ${newStudyNotifications}">
-            <span th:text="${newStudyNotification.getMessage()}"> </span>
+            [ <a th:href="@{'/study-group/' + ${newStudyNotification.getStudyGroup().id}}" th:text="${newStudyNotification.getStudyGroup().getTitle()}"></a>
+            ] <span th:text="${newStudyNotification.getMessage()}"></span>
           </div>
           </div>
         </div>
@@ -51,18 +52,20 @@
           </div>
           <div class="card-body">
             <div th:each="updateStudyNotification: ${updateStudyNotifications}">
-              <span th:text="${updateStudyNotification.getMessage()}"> </span>
+              [ <a th:href="@{'/study-group/' + ${updateStudyNotification.getStudyGroup().id}}" th:text="${updateStudyNotification.getStudyGroup().getTitle()}"></a>
+              ] <span th:text="${updateStudyNotification.getMessage()}"> </span>
             </div>
           </div>
         </div>
 
         <div class="card" th:if="${enrollmentNotifications.size() >0}" style="margin-top: 20px">
           <div class="card-header">
-            <span sec:authentication="name"></span> 님이
-            개설한 스터디에 참가 신청이 등록되었습니다.
+            <span sec:authentication="name"></span> 님의 참가 신청 현황입니다.
           </div>
           <div class="card-body">
             <div th:each="enrollmentNotification: ${enrollmentNotifications}">
+              [ <a th:href="@{'/study-group/' + ${enrollmentNotification.getStudyGroup().id}}" th:text="${enrollmentNotification.getStudyGroup().getTitle()}"></a>
+              ]
               <span th:text="${enrollmentNotification.getMessage()}"> </span>
             </div>
           </div>
