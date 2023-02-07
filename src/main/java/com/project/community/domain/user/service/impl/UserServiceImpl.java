@@ -59,7 +59,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void updateProfile(User user, Profile profile) throws ParseException {
         profile.setPassword(passwordEncoder.encode(profile.getPassword()));
-        user.getSkills().clear();
         parseSkillJson(profile, user.getId());
         user.update(profile.getNickname(), profile.getLocation(), profile.getPassword());
     }
