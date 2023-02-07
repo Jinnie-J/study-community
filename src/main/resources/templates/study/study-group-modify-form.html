@@ -21,7 +21,7 @@
                     <span aria-hidden="true">x</span>
                 </button>
             </div>
-            <form class="needs-validation col-sm-10" th:action="@{/study-group/update/{id}(id=${studyGroup.studyGroupId})}" th:object="${studyGroupRequest}" method="post" novalidate>
+            <form class="needs-validation" th:action="@{/study-group/update/{id}(id=${studyGroup.studyGroupId})}" th:object="${studyGroupRequest}" method="post" novalidate>
                 <div class="studyInfo">
                 <div class="form-group">
                     <label for="studyType">모집 구분</label>

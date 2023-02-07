@@ -15,7 +15,7 @@
         </div>
         <div class="col-6">
             <h3>프로젝트 기본 정보를 입력해주세요.</h3><br>
-            <form class="needs-validation col-sm-10" th:action="@{/study-group/create}" th:object="${studyGroupRequest}" method="post" novalidate>
+            <form class="needs-validation" th:action="@{/study-group/create}" th:object="${studyGroupRequest}" method="post" novalidate>
                 <div class="studyInfo">
                 <div class="form-group">
                     <label>모집 구분</label>
