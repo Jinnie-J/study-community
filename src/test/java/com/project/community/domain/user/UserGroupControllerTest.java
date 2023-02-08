@@ -110,22 +110,38 @@ public class UserGroupControllerTest {
         mockMvc.perform(get("/study-group/"+ studyGroup.getStudyGroupId() + "/user-group/"+ userGroup.getId() + "/enrollments/"+ enrollmentId + "/accept" )
                 .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/study-group/"+ studyGroup.getStudyGroupId() +"/people"));
+                .andExpect(redirectedUrl("/study-group/"+ studyGroup.getStudyGroupId()));
 
         assertTrue(enrollmentRepository.findByUserGroupAndUser(userGroup,member).isAccepted());
     }
 
-    @WithUserDetails(value="jinnie", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @WithUserDetails(value="test", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     @DisplayName("스터디 그룹 참가 신청 거절")
     void rejectEnrollment() throws Exception{
-        //거절 시, 해당 그룹에 신청 다시 못하게 할 것 인지 확인
+        User leader = userRepository.findByNickname("jieun");
+        User member = userRepository.findByNickname("test");
+        StudyGroupResponse studyGroup = createStudyGroup("test-study-title","test-study-content", leader);
+        UserGroup userGroup = userGroupRepository.findByStudyGroupId(studyGroup.getStudyGroupId());
+
+        userGroupService.newEnrollment(userGroup,member);
+        Long enrollmentId = enrollmentRepository.findByUserGroupAndUser(userGroup, member).getId();
+
+        mockMvc.perform(get("/study-group/"+ studyGroup.getStudyGroupId() + "/user-group/"+ userGroup.getId() + "/enrollments/"+ enrollmentId + "/accept"));
+
+        mockMvc.perform(get("/study-group/"+ studyGroup.getStudyGroupId() + "/user-group/"+ userGroup.getId() + "/enrollments/"+ enrollmentId + "/reject")
+                .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study-group/"+ studyGroup.getStudyGroupId()));
+
+        assertFalse(enrollmentRepository.findByUserGroupAndUser(userGroup,member).isAccepted());
     }
 
     private StudyGroupResponse createStudyGroup(String title, String content, User user) throws ParseException, CloneNotSupportedException {
         StudyGroupRequest studyGroup= StudyGroupRequest.builder()
                 .title(title)
                 .content(content)
+                .numberOfMembers("5")
                 .build();
         return studyGroupService.createStudyGroup(user, studyGroup);
 

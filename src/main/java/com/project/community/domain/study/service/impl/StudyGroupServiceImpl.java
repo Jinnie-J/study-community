@@ -52,11 +52,11 @@ public class StudyGroupServiceImpl implements StudyGroupService {
 
         studyGroupRequest.setCreatedBy(user.getNickname());
         studyGroupRequest.setRemainingSeats((long) Integer.parseInt(studyGroupRequest.getNumberOfMembers()));
-        studyGroupRequest.setCreateDate(LocalDateTime.now());
         StudyGroup studyGroup = StudyGroupRequest.toEntity(studyGroupRequest);
         StudyGroup newStudyGroup = studyGroupRepository.save(studyGroup);
 
-        parseSkillJson(request, newStudyGroup.getId());
+        if(request.getSkills() != null)
+            parseSkillJson(request, newStudyGroup.getId());
 
         UserGroup userGroup = UserGroup.builder()
                 .studyGroup(newStudyGroup)

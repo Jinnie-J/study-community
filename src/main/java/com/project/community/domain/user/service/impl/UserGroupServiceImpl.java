@@ -37,6 +37,7 @@ public class UserGroupServiceImpl implements UserGroupService {
 
             userGroup.addEnrollment(enrollment);
             enrollmentRepository.save(enrollment);
+            eventPublisher.publishEvent(new EnrollmentEvent(enrollment, "참가 신청이 완료되었습니다.",userGroup));
         }
     }
 
@@ -45,13 +46,14 @@ public class UserGroupServiceImpl implements UserGroupService {
        Enrollment enrollment = enrollmentRepository.findByUserGroupAndUser(userGroup, user);
        userGroup.removeEnrollment(enrollment);
        enrollmentRepository.delete(enrollment);
+        eventPublisher.publishEvent(new EnrollmentEvent(enrollment, "참가 신청을 취소하였습니다.", userGroup));
     }
 
     @Override
     public void acceptEnrollment(StudyGroup studyGroup, UserGroup userGroup, Enrollment enrollment) {
         userGroup.accept(enrollment);
         studyGroup.addMember();
-        eventPublisher.publishEvent(new EnrollmentEvent(enrollment, "모임 신청을 수락하였습니다."));
+        eventPublisher.publishEvent(new EnrollmentEvent(enrollment, "모임 리더가 참가 신청을 수락하였습니다.", userGroup));
     }
 
     @Override
@@ -61,6 +63,6 @@ public class UserGroupServiceImpl implements UserGroupService {
         if(userGroup.isAccepted(userAccount)) {
             studyGroup.removeMember();
         }
-        eventPublisher.publishEvent(new EnrollmentEvent(enrollment,"모임 신청을 거절하였습니다."));
+        eventPublisher.publishEvent(new EnrollmentEvent(enrollment,"모임 리더가 참가 신청을 거절하였습니다.",userGroup));
     }
 }

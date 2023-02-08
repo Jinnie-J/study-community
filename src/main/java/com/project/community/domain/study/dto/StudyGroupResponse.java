@@ -51,9 +51,9 @@ public class StudyGroupResponse {
 
     private LocalDateTime studyStartDate;
 
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
 
-    private LocalDateTime updateDate;
+    private LocalDateTime modifiedDate;
 
     private Boolean closed;
 
@@ -66,7 +66,7 @@ public class StudyGroupResponse {
                 .studyGroupId(studyGroup.getId())
                 .title(studyGroup.getTitle())
                 .content(studyGroup.getContent())
-                .createDate(studyGroup.getCreateDate())
+                .createdDate(studyGroup.getCreatedDate())
                 .createdBy(studyGroup.getCreatedBy())
                 .studyType(studyGroup.getStudyType())
                 .numberOfMembers(studyGroup.getNumberOfMembers())

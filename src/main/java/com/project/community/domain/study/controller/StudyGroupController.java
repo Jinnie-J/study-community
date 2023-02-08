@@ -73,7 +73,7 @@ public class StudyGroupController {
         }
 
         studyGroupService.createStudyGroup(user, studyGroupRequest);
-        return "redirect:/study-group/sort/id";
+        return "redirect:/";
     }
 
     //스터디 그룹 전체 조회
@@ -174,7 +174,7 @@ public class StudyGroupController {
         }
 
         studyGroupService.updateStudyGroup(user, studyGroupId, studyGroupRequest);
-        attributes.addFlashAttribute("message", "스터디 정보를 수정했습니다.");
+        attributes.addFlashAttribute("message", "모임 정보를 수정했습니다.");
         return "redirect:/study-group/{studyGroupId}";
     }
 
@@ -182,7 +182,7 @@ public class StudyGroupController {
     @PostMapping("/study-group/close/{studyGroupId}")
     public String closeStudyGroup(@CurrentUser User user, @PathVariable("studyGroupId") Long studyGroupId, RedirectAttributes attributes){
         studyGroupService.closeStudyGroup(user, studyGroupId);
-        attributes.addFlashAttribute("message", "스터디를 마감했습니다");
+        attributes.addFlashAttribute("message", "모임 모집을 마감했습니다");
 
         return "redirect:/study-group/{studyGroupId}";
     }
@@ -190,11 +190,11 @@ public class StudyGroupController {
     //스터디 그룹 검색
     @GetMapping("/search/study")
     public String searchStudy(String keyword, Model model,
-                              @PageableDefault(size = 9, sort="createDate", direction = Sort.Direction.DESC) Pageable pageable){
+                              @PageableDefault(size = 9, sort="createdDate", direction = Sort.Direction.DESC) Pageable pageable){
         Page<StudyGroup> studyGroupPage = studyGroupRepository.findByKeyword(keyword, pageable);
         model.addAttribute("studyGroupPage", studyGroupPage);
         model.addAttribute("keyword",keyword);
-        model.addAttribute("sortProperty", pageable.getSort().toString().contains("createDate") ? "createDate" : "remainingSeats");
+        model.addAttribute("sortProperty", pageable.getSort().toString().contains("createdDate") ? "createdDate" : "remainingSeats");
         return "search";
     }
 
@@ -204,6 +204,6 @@ public class StudyGroupController {
         studyGroupService.deleteStudyGroup(user, studyGroupId);
         attributes.addFlashAttribute("message", "스터디를 삭제했습니다");
 
-        return "redirect:/study-group/sort/id";
+        return "redirect:/";
     }
 }

@@ -181,4 +181,19 @@ public class StudyGroupControllerTest {
         assertTrue(studyGroup.isClosed());
     }
 
+    @WithUserDetails(value="jinnie", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    @DisplayName("스터디 그룹 삭제")
+    void deleteStudyGroup() throws Exception{
+
+        mockMvc.perform(get("/study-group/delete/358"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study-group/sort/id"))
+                .andExpect(flash().attributeExists("message"));
+
+        Optional<StudyGroup> studyGroup = studyGroupRepository.findById(358L);
+        assertFalse(studyGroup.isPresent());
+
+    }
+
 }

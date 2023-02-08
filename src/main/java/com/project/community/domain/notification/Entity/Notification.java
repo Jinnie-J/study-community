@@ -1,5 +1,7 @@
-package com.project.community.domain.notification;
+package com.project.community.domain.notification.Entity;
 
+import com.project.community.domain.notification.Enums.NotificationType;
+import com.project.community.domain.study.entity.StudyGroup;
 import com.project.community.domain.user.entity.User;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,6 +23,9 @@ public class Notification {
     private String message;
 
     private boolean checked;
+
+    @ManyToOne
+    private StudyGroup studyGroup;
 
     @ManyToOne
     private User user;

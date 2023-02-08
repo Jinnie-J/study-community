@@ -1,9 +1,10 @@
 package com.project.community.domain.enrollment.event;
 
 import com.project.community.domain.enrollment.entity.Enrollment;
-import com.project.community.domain.notification.Notification;
-import com.project.community.domain.notification.NotificationType;
+import com.project.community.domain.notification.Entity.Notification;
+import com.project.community.domain.notification.Enums.NotificationType;
 import com.project.community.domain.notification.repository.NotificationRepository;
+import com.project.community.domain.study.entity.StudyGroup;
 import com.project.community.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
@@ -25,6 +26,7 @@ public class EnrollmentEventListener {
     public void handleEnrollmentEvent(EnrollmentEvent enrollmentEvent){
         Enrollment enrollment = enrollmentEvent.getEnrollment();
         User user = enrollment.getUser();
+        StudyGroup studyGroup = enrollment.getUserGroup().getStudyGroup();
 
         Notification notification = new Notification();
         notification.setTitle("Enrollment");
@@ -32,6 +34,7 @@ public class EnrollmentEventListener {
         notification.setCreatedDateTime(LocalDateTime.now());
         notification.setMessage(enrollmentEvent.getMessage());
         notification.setUser(user);
+        notification.setStudyGroup(studyGroup);
         notification.setNotificationType(NotificationType.ENROLLMENT);
         notificationRepository.save(notification);
     }

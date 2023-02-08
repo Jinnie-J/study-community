@@ -21,7 +21,8 @@ public class SecurityConfig {
     @Bean
     public DefaultSecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeRequests()
-                .mvcMatchers("/", "/login", "/sign-up", "login-link", "/profile/*", "/study-group/*").permitAll()
+                .mvcMatchers("/login").not().fullyAuthenticated()
+                .mvcMatchers("/", "/login", "/sign-up", "login-link", "/profile/*", "/study-group" , "/img/**").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/profile/*").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -34,7 +35,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
-                .mvcMatchers("/node_modules/**")
+                .mvcMatchers("/node_modules/**","/favicon.ico", "/resources/**", "/error", "/img/**")
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 }

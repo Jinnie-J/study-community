@@ -1,6 +1,6 @@
 package com.project.community.domain.notification.service.impl;
 
-import com.project.community.domain.notification.Notification;
+import com.project.community.domain.notification.Entity.Notification;
 import com.project.community.domain.notification.repository.NotificationRepository;
 import com.project.community.domain.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;

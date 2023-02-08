@@ -1,7 +1,7 @@
 package com.project.community.domain.notification.controller;
 
 import com.project.community.common.CurrentUser;
-import com.project.community.domain.notification.Notification;
+import com.project.community.domain.notification.Entity.Notification;
 import com.project.community.domain.notification.repository.NotificationRepository;
 import com.project.community.domain.notification.service.NotificationService;
 import com.project.community.domain.user.entity.User;

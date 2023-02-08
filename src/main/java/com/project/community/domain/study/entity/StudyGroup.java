@@ -1,5 +1,6 @@
 package com.project.community.domain.study.entity;
 
+import com.project.community.common.BaseTimeEntity;
 import com.project.community.domain.comment.entity.Comment;
 import com.project.community.domain.location.entity.Location;
 import com.project.community.domain.skill.entity.Skill;
@@ -20,7 +21,7 @@ import java.util.Set;
 @Getter
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor
-public class StudyGroup {
+public class StudyGroup extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
@@ -56,10 +57,6 @@ public class StudyGroup {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime studyStartDate;  //시작일
-
-    private LocalDateTime createDate;  //등록일
-
-    private LocalDateTime updateDate;  //수정일
 
     private boolean closed; // 모집마감
 
@@ -97,7 +94,7 @@ public class StudyGroup {
     }
     @Builder
     public StudyGroup(Long id, String title, String createdBy, String content, StudyType studyType, String numberOfMembers,Long remainingSeats ,Location location, ContactType contactType,
-                      String duration, MeetingType meetingType, Set skills, LocalDateTime studyStartDate, LocalDateTime createDate, LocalDateTime updateDate, Boolean closed, int view){
+                      String duration, MeetingType meetingType, Set skills, LocalDateTime studyStartDate, LocalDateTime createdDate, Boolean closed, int view){
         this.id = id;
         this.title = title;
         this.content = content;
@@ -110,8 +107,6 @@ public class StudyGroup {
         this.meetingType = meetingType;
         this.skills = skills;
         this.studyStartDate = studyStartDate;
-        this.createDate = createDate;
-        this.updateDate = updateDate;
         this.contactType = contactType;
         this.closed = closed;
         this.view = view;

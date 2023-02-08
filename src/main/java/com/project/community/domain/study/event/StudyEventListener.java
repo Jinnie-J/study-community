@@ -1,7 +1,7 @@
 package com.project.community.domain.study.event;
 
-import com.project.community.domain.notification.Notification;
-import com.project.community.domain.notification.NotificationType;
+import com.project.community.domain.notification.Entity.Notification;
+import com.project.community.domain.notification.Enums.NotificationType;
 import com.project.community.domain.notification.repository.NotificationRepository;
 import com.project.community.domain.study.entity.StudyGroup;
 import com.project.community.domain.user.UserPredicates;
@@ -32,7 +32,7 @@ public class StudyEventListener {
     @EventListener
     public void handleStudyCreatedEvent(StudyCreatedEvent studyCreatedEvent){
         StudyGroup studyGroup = studyCreatedEvent.getStudyGroup();
-        String message = studyGroup.getLocation() +"지역에" + studyGroup.getSkills() +"의 기술을 사용하는 모임이 등록되었습니다.";
+        String message = "새로운 모임이 등록되었습니다.";
         Iterable<User> users = userRepository.findAll(UserPredicates.findByLocationAndSkills(studyGroup.getLocation(), studyGroup.getSkills()));
         users.forEach(user -> {
             createNotification(studyGroup, user, message, NotificationType.CREATED);
@@ -58,6 +58,7 @@ public class StudyEventListener {
         notification.setChecked(false);
         notification.setCreatedDateTime(LocalDateTime.now());
         notification.setMessage(message);
+        notification.setStudyGroup(studyGroup);
         notification.setUser(user);
         notification.setNotificationType(notificationType);
         notificationRepository.save(notification);

@@ -69,7 +69,7 @@
             <h3 th:text="${studyGroup.title}" class="context"></h3>
             <div>
             <span th:text="${studyGroup.createdBy}" id="createdBy"></span> |
-            <span th:text="${#temporals.format(studyGroup.createDate,'yyyy-MM-dd')}" id="createDate"></span>
+            <span th:text="${#temporals.format(studyGroup.createdDate,'yyyy-MM-dd')}" id="createdDate"></span>
             </div>
             <small class="text-success" th:if="${userGroup.isAccepted(#authentication.principal)}" >참석 완료</small>
             <small class="text-success" th:if="${studyGroup.remainingSeats} == 0" >인원 모집 마감</small>
