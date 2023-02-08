@@ -1,5 +1,6 @@
 package com.project.community.domain.user.entity;
 
+import com.project.community.common.BaseTimeEntity;
 import com.project.community.domain.location.entity.Location;
 import com.project.community.domain.skill.entity.Skill;
 import lombok.*;
@@ -14,7 +15,7 @@ import java.util.Set;
 @Getter
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor
-public class User {
+public class User extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "user_id")
@@ -35,10 +36,6 @@ public class User {
 
     private String password;
 
-    private LocalDateTime createDate;
-
-    private LocalDateTime modifyDate;
-
     @Lob @Basic(fetch = FetchType.EAGER)
     private String profileImage;
 
@@ -51,15 +48,13 @@ public class User {
         this.password = password;
     }
     @Builder
-    public User(Long id, String email, Location location, Set skills, String nickname, String password, LocalDateTime createDate, LocalDateTime modifyDate, String profileImage){
+    public User(Long id, String email, Location location, Set skills, String nickname, String password, String profileImage){
         this.id = id;
         this.email = email;
         this.location = location;
         this.skills = skills;
         this.nickname = nickname;
         this.password = password;
-        this.createDate = createDate;
-        this.modifyDate = modifyDate;
         this.profileImage = profileImage;
     }
 
