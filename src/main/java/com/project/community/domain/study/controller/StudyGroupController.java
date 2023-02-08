@@ -190,11 +190,11 @@ public class StudyGroupController {
     //스터디 그룹 검색
     @GetMapping("/search/study")
     public String searchStudy(String keyword, Model model,
-                              @PageableDefault(size = 9, sort="createDate", direction = Sort.Direction.DESC) Pageable pageable){
+                              @PageableDefault(size = 9, sort="createdDate", direction = Sort.Direction.DESC) Pageable pageable){
         Page<StudyGroup> studyGroupPage = studyGroupRepository.findByKeyword(keyword, pageable);
         model.addAttribute("studyGroupPage", studyGroupPage);
         model.addAttribute("keyword",keyword);
-        model.addAttribute("sortProperty", pageable.getSort().toString().contains("createDate") ? "createDate" : "remainingSeats");
+        model.addAttribute("sortProperty", pageable.getSort().toString().contains("createdDate") ? "createdDate" : "remainingSeats");
         return "search";
     }
 

@@ -47,9 +47,9 @@ public class StudyGroupRequest implements Cloneable{
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime studyStartDate;
 
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
 
-    private LocalDateTime updateDate;
+    private LocalDateTime modifiedDate;
 
     private boolean closed;
 
@@ -61,7 +61,7 @@ public class StudyGroupRequest implements Cloneable{
                 .title(studyGroupRequest.getTitle())
                 .content(studyGroupRequest.getContent())
                 .createdBy(studyGroupRequest.getCreatedBy())
-                .createDate(studyGroupRequest.getCreateDate())
+                .createdDate(studyGroupRequest.getCreatedDate())
                 .studyType(studyGroupRequest.getStudyType())
                 .numberOfMembers(studyGroupRequest.getNumberOfMembers())
                 .remainingSeats(studyGroupRequest.getRemainingSeats())
