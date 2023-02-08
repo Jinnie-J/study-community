@@ -1,6 +1,6 @@
 package com.project.community.domain.notification.repository;
 
-import com.project.community.domain.notification.Notification;
+import com.project.community.domain.notification.Entity.Notification;
 import com.project.community.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;

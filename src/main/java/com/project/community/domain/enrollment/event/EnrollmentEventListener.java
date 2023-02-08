@@ -1,8 +1,8 @@
 package com.project.community.domain.enrollment.event;
 
 import com.project.community.domain.enrollment.entity.Enrollment;
-import com.project.community.domain.notification.Notification;
-import com.project.community.domain.notification.NotificationType;
+import com.project.community.domain.notification.Entity.Notification;
+import com.project.community.domain.notification.Enums.NotificationType;
 import com.project.community.domain.notification.repository.NotificationRepository;
 import com.project.community.domain.study.entity.StudyGroup;
 import com.project.community.domain.user.entity.User;
