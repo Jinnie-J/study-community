@@ -61,6 +61,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         profile.setPassword(passwordEncoder.encode(profile.getPassword()));
         parseSkillJson(profile, user.getId());
         user.update(profile.getNickname(), profile.getLocation(), profile.getPassword());
+        userRepository.save(user);
     }
 
     @Override
