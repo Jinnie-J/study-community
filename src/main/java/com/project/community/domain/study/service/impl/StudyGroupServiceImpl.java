@@ -55,7 +55,8 @@ public class StudyGroupServiceImpl implements StudyGroupService {
         StudyGroup studyGroup = StudyGroupRequest.toEntity(studyGroupRequest);
         StudyGroup newStudyGroup = studyGroupRepository.save(studyGroup);
 
-        if(request.getSkills() != null)
+        String skillList = (String) request.getSkills();
+        if(!skillList.isEmpty())
             parseSkillJson(request, newStudyGroup.getId());
 
         UserGroup userGroup = UserGroup.builder()
@@ -96,7 +97,9 @@ public class StudyGroupServiceImpl implements StudyGroupService {
                 .orElseThrow(() -> new IllegalArgumentException(studyGroupId + "에 해당하는 스터디가 없습니다."));
 
         studyGroup.getSkills().clear();
-        parseSkillJson(studyGroupRequest, studyGroupId);
+        String skillList = (String) studyGroupRequest.getSkills();
+        if(!skillList.isEmpty())
+            parseSkillJson(studyGroupRequest, studyGroupId);
 
         studyGroup.update(studyGroupRequest.getTitle(), studyGroupRequest.getContent(), studyGroupRequest.getStudyType(),
                 studyGroupRequest.getNumberOfMembers(),studyGroupRequest.getLocation(), studyGroupRequest.getDuration(), studyGroupRequest.getStudyStartDate(),

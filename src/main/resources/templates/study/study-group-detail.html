@@ -109,7 +109,10 @@
                     <div class="studyInfo">
                         <div class="mb-3 row">
                             <label for="studyStartDate" class="col-sm-4 col-form-label">시작 예정</label>
-                            <div class="col-sm-8">
+                            <div class="col-sm-8" th:if="${#strings.isEmpty(studyGroup.studyStartDate)}">
+                                <input type="text" readonly class="form-control-plaintext" value="시작 예정일 미정">
+                            </div>
+                            <div class="col-sm-8" th:if="${!#strings.isEmpty(studyGroup.studyStartDate)}">
                                 <input type="text" readonly th:value="${#temporals.format(studyGroup.studyStartDate,'yyyy-MM-dd')}" class="form-control-plaintext" id="studyStartDate">
                             </div>
                         </div>
@@ -159,7 +162,10 @@
                         </div>
                         <div class="mb-3 row">
                             <label for="duration" class="col-sm-4 col-form-label">기간</label>
-                            <div class="col-sm-8">
+                            <div th:if="${#strings.equals(studyGroup.duration, '기간 미정')}" class="col-sm-8">
+                                <input type="text" readonly th:value="${studyGroup.duration}" class="form-control-plaintext">
+                            </div>
+                            <div th:if="${!#strings.equals(studyGroup.duration, '기간 미정')}" class="col-sm-8">
                                 <input type="text" readonly th:value="${studyGroup.duration}+개월" class="form-control-plaintext" id="duration">
                             </div>
                         </div>
