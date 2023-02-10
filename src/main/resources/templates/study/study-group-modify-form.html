@@ -58,9 +58,9 @@
                 <div class="form-group">
                     <label for="numberOfMembers">모집 인원</label>
                     <select id="numberOfMembers" name="numberOfMembers" class="form-select">
-                        <option th:value="|인원 미정|" th:text="|인원 미정|"></option>
+                        <option th:value="100" th:text="|인원 미정|"></option>
                         <option th:each="num: ${#numbers.sequence(1,9)}" th:value="${num}" th:text="${num}+명" th:selected="${studyGroup.numberOfMembers} ==${num}"></option>
-                        <option th:value="|10명 이상|" th:text="|10명 이상|"></option>
+                        <option th:value="10" th:text="|10명 이상|"></option>
                     </select>
                 </div>
                 <div class="form-group">
