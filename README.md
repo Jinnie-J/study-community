@@ -13,10 +13,10 @@
 
 ## 화면 설계
 - 카카오 오븐
-  https://ovenapp.io/project/08O9rlQGBuIYVQtozSKTvgevitEIyj1L#vQZ9i
+  https://ovenapp.io/project/08O9rlQGBuIYVQtozSKTvgevitEIyj1L#AMazN
   
 - 화면 목록
-  ![화면목록](https://user-images.githubusercontent.com/62706198/217535339-5f47c50f-da8e-4823-8aaa-0a8221898875.jpeg)
+  ![화면목록](https://user-images.githubusercontent.com/62706198/218517775-160b9e98-bb06-4c4a-9c42-29e2301d061e.jpeg)
   
   
 </br>
@@ -34,7 +34,7 @@
 
 ### 아키텍처
 - ERD
-![erd](https://user-images.githubusercontent.com/62706198/217452992-ad999430-91e6-4a48-99f4-8a00d66eff3c.png)
+![ERD](https://user-images.githubusercontent.com/62706198/218522366-82de566b-579b-43c6-aaed-0acb9789619a.png)
   
   
 </br>
@@ -73,7 +73,7 @@
 
 3. [패스워드를 평문으로 저장해서는 안된다.](https://jinniedev.tistory.com/5)
 
-4. Open EntityManager In View 필터
+4. [Open EntityManager In View 필터](https://jinniedev.tistory.com/47)
 
 5. [Setter의 사용을 지양해야 한다.](https://jinniedev.tistory.com/6)
 
@@ -86,6 +86,8 @@
 8. [JPA에서는 코드 테이블의 형태를 EnumType으로 작성한다.](https://jinniedev.tistory.com/12)
 
 9. [알림 구현 방식과 Spring의 @EventListener](https://jinniedev.tistory.com/13)
+
+10. [JPA N+1 Select 문제와 해결](https://jinniedev.tistory.com/46)
 
 ### Front-end
 1. [타임리프 댓글 수정 기능 구현 시 data-target 설정](https://jinniedev.tistory.com/40)
